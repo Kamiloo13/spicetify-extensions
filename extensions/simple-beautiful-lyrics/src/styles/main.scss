@@ -1,0 +1,148 @@
+// We need to override the hover effect since we changed the way the text is filled-in
+.lyric:hover {
+    text-shadow: 0 0 0px var(--lyrics-color-active) !important;
+}
+
+// When the active text grows in size we want more space between it and the surrounding lines
+.lyrics-lyricsContent-active {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+}
+
+// Improves scroll-bar
+.os-host:has(.lyrics-background),
+#lyrics-cinema,
+.Root__main-view:has(.lyrics-background) {
+    .os-scrollbar {
+        padding: 5px;
+
+        .os-scrollbar-handle {
+            mix-blend-mode: overlay;
+            background-color: rgba(252, 249, 249, 0.117) !important;
+        }
+    }
+}
+
+/*
+	We have to override the unsung lyric color since Spotifys black text doesn't work too well
+	with gradient-color backgrounds. It works with the solid-color background because the contrast
+	between the unsung text, the sung/active text, and the background itself is completely balanced.
+
+	With gradient backgrounds the contrast differs in many different places and black text creates
+	a stark inbalance in contrast between the white text and the varying contrast points in the gradient
+	background.
+
+	The color chosen is close to that of the already sung lyrics but fainter to create a more balanced
+	and distinguishable contrast between the sung and unsung lyrics.
+*/
+.lyrics-lyrics-container,
+.main-nowPlayingView-section {
+    --lyrics-color-inactive: rgb(240 240 240 / 51%) !important;
+}
+
+// This is the entire lyrics configuration used to create the gradient backgrounds
+.lyrics-background {
+    // This is the overarching container, the parent of the container class
+    overflow: hidden;
+    position: static;
+
+    /*
+		The idea behind this is to create a gradient-background that resembles Apple Music.
+
+		We could technically simulate blob-merging of these colors and extract colors out of the
+		cover-art. However - that is ridiculously expensive computationaly - and more importantly;
+		I don't want to extract the colors from the cover-art in the first place.
+
+		The easier solution is to use the cover-art as an image and blur it. To simulate blob-merging
+		we have two circles with the image (two images cropped circularly) blurred significantly. We then
+		apply a blend-mode to one of the circles and layer it on top. This helps sell the illusion that
+		these colors are merging in blobs.
+	*/
+
+    // As the name suggests, this contains the color/back images - which make up the gradient itself
+    &-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+
+        filter: saturate(1.5) brightness(0.8); // Blur-related
+    }
+
+    // Sharable properties
+    &-color,
+    &-back,
+    &-back-center {
+        /* This is to align our img element */
+        position: absolute;
+        width: 200%;
+        /*aspect-ratio: 1/1;*/
+        animation: rotate 35s linear infinite;
+
+        /* Align our image to the center of our div */
+        /*img, canvas {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			translate: -50% -50%;
+		}*/
+
+        filter: blur(40px); // Blur-related
+        border-radius: 100em; // Blur-related
+    }
+
+    // The primary image which gives the blending effect it's illusional property
+    &-color {
+        right: 0;
+        top: 0;
+        z-index: 10;
+
+        /*mix-blend-mode: soft-light;*/
+    }
+
+    // Additional image to cover space that the primary image doesn't cover (and to develop blob-blending)
+    &-back {
+        left: 0;
+        bottom: 0;
+        z-index: 1;
+        animation-direction: reverse;
+    }
+
+    // Final image to cover the center
+    &-back-center {
+        z-index: 0;
+
+        width: 300%;
+        right: -50%;
+        top: -20%;
+
+        animation-direction: reverse;
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+:root {
+    --beautiful-lyrics-random-degree: 258deg;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(var(--beautiful-lyrics-random-degree));
+    }
+
+    100% {
+        transform: rotate(calc(var(--beautiful-lyrics-random-degree) + 360deg));
+    }
+}

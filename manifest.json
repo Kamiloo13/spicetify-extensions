@@ -1,0 +1,19 @@
+[
+    {
+        "name": "Simple Beautiful Lyrics",
+        "description": "Adds Dynamic Background, Blurred Lyrics.",
+        "preview": "extensions/simple-beautiful-lyrics/preview.gif",
+        "main": "extensions/simple-beautiful-lyrics/dist/simple-beautiful-lyrics.js",
+        "readme": "extensions/simple-beautiful-lyrics/README.md",
+        "authors": [
+            {
+                "name": "Kamiloo13",
+                "url": "https://github.com/kamiloo13"
+            }
+        ],
+        "tags": [
+            "lyrics",
+            "background"
+        ]
+    }
+]
