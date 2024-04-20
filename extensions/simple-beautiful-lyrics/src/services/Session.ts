@@ -11,7 +11,7 @@ let IsDevelopment = false;
 
     for (const script of document.getElementsByTagName("script")) {
         if (script.src.includes("beautiful-lyrics.js")) {
-            if (script.src.includes("https://xpui.app.spotify.com/")) {
+            if (script.src.startsWith("https://xpui.app.spotify.com/")) {
                 if (developmentScript === undefined) {
                     developmentScript = script;
                 } else {
