@@ -3,5 +3,7 @@
     "compilerOptions": {
         "outDir": "./dist"
     },
-    "include": ["./src/**/*", "../shared/types/*.d.ts"]
+    "include": [
+        "./src/**/*"
+    ]
 }

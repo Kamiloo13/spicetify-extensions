@@ -85,7 +85,7 @@ const CheckForUpdate = async () => {
     let nextTimeoutDuration = NextFailedUpdateCheck;
 
     // Grab our version
-    fetch("https://api.github.com/repos/kamiloo13/spicetify-extensions/contents/extensions/simple-beautiful-lyrics/dist/beautiful-lyrics.js")
+    fetch("https://api.github.com/repos/kamiloo13/spicetify-extensions/contents/extensions/simple-beautiful-lyrics/dist/simple-beautiful-lyrics.js")
         .then((data) => data.json())
         .then((data) => fetch(`https://api.github.com/repos/kamiloo13/spicetify-extensions/git/blobs/${data.sha}`))
         .then((data) => data.json())

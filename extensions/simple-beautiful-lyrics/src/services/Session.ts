@@ -10,7 +10,7 @@ let IsDevelopment = false;
     let developmentScript: HTMLScriptElement | undefined;
 
     for (const script of document.getElementsByTagName("script")) {
-        if (script.src.includes("beautiful-lyrics.js")) {
+        if (script.src.includes("simple-beautiful-lyrics.js")) {
             if (script.src.startsWith("https://xpui.app.spotify.com/")) {
                 if (developmentScript === undefined) {
                     developmentScript = script;
