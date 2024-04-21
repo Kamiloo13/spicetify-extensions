@@ -15,5 +15,18 @@
             "lyrics",
             "background"
         ]
+    },
+    {
+        "name": "Sleep Timer Updated",
+        "description": "Adds a sleep timer to the player.",
+        "preview": "extensions/sleep-timer-updated/preview.png",
+        "main": "extensions/sleep-timer-updated/dist/sleep-timer-updated.js",
+        "readme": "extensions/sleep-timer-updated/README.md",
+        "authors": [
+            {
+                "name": "Kamiloo13",
+                "url": "https://github.com/kamiloo13"
+            }
+        ]
     }
 ]

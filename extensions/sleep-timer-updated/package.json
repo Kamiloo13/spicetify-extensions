@@ -1,0 +1,22 @@
+{
+    "name": "sleep-timer-updated",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "spicetify-creator",
+        "build-local": "spicetify-creator --out=dist --minify",
+        "watch": "spicetify-creator --watch",
+        "start": "spicetify config extensions sleep-timer-updated.js & spicetify apply enable-devtools",
+        "lint": "eslint .",
+        "update-types": "curl -s -o ./src/types/spicetify.d.ts https://raw.githubusercontent.com/spicetify/spicetify-cli/master/globals.d.ts"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "@types/node": "^20.12.7",
+        "@types/react": "^18.2.79",
+        "@types/react-dom": "^18.2.25",
+        "eslint": "^8.57.0",
+        "spicetify-creator": "^1.0.17",
+        "typescript-eslint": "^7.7.0"
+    }
+}
