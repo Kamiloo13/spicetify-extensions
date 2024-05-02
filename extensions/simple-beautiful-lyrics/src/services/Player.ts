@@ -2,7 +2,7 @@ import { SpotifyPlayer, GlobalCleanup } from "./Session";
 import Signal from "./Signal";
 
 class Player {
-    public SongChanged: Signal = new Signal();
+    public SongChanged = new Signal();
 
     private Started = false;
 
@@ -15,7 +15,7 @@ class Player {
             };
 
             SpotifyPlayer.addEventListener("songchange", callback);
-            GlobalCleanup.AddTask(() => SpotifyPlayer.removeEventListener("songchange", callback as any));
+            GlobalCleanup.AddTask(() => SpotifyPlayer.removeEventListener("songchange", callback));
 
             if (SpotifyPlayer.data !== undefined) {
                 callback();

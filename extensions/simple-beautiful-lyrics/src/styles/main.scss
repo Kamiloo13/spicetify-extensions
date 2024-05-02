@@ -1,17 +1,19 @@
+$active-lyric-class: EhKgYshvOwpSrTv399Mw;
+$lyric-class: nw6rbs8R08fpPn7RWW2w;
+
 // We need to override the hover effect since we changed the way the text is filled-in
-.lyric:hover {
+.#{$lyric-class}:hover {
     text-shadow: 0 0 0px var(--lyrics-color-active) !important;
 }
 
 // When the active text grows in size we want more space between it and the surrounding lines
-.lyrics-lyricsContent-active {
+.#{$active-lyric-class} {
     margin-top: 0.25em;
     margin-bottom: 0.25em;
 }
 
 // Improves scroll-bar
 .os-host:has(.lyrics-background),
-#lyrics-cinema,
 .Root__main-view:has(.lyrics-background) {
     .os-scrollbar {
         padding: 5px;
@@ -35,8 +37,7 @@
 	The color chosen is close to that of the already sung lyrics but fainter to create a more balanced
 	and distinguishable contrast between the sung and unsung lyrics.
 */
-.lyrics-lyrics-container,
-.main-nowPlayingView-section {
+.#{$lyric-class} {
     --lyrics-color-inactive: rgb(240 240 240 / 51%) !important;
 }
 

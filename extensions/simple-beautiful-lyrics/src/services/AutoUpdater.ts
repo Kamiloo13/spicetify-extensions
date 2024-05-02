@@ -5,7 +5,7 @@ import Timeout from "./Timeout";
 import { version as PackageVersion } from "../../package.json";
 
 // Services
-import { GlobalCleanup, IsDevelopment, Script, ShowNotification } from "./Session";
+import { GlobalCleanup, HasDevInstance, Script, ShowNotification } from "./Session";
 
 // Behavior Constants
 const JustUpdatedNotificationLifetime = 7.5; // Measured in Seconds
@@ -121,7 +121,7 @@ const CheckForUpdate = async () => {
 };
 
 export const Start = () => {
-    if (IsDevelopment === false) {
+    if (!HasDevInstance) {
         console.log("[simple-beautiful-lyrics] AutoUpdater: Checking for Updates");
         CheckForUpdate();
     } else {

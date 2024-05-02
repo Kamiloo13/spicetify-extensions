@@ -4,7 +4,7 @@ const GlobalCleanup = new Cleanup();
 
 // Store our current-script/style and handle other-scripts not existing
 let Script: HTMLScriptElement;
-let IsDevelopment = false;
+let HasDevInstance = false;
 {
     let productionScript: HTMLScriptElement | undefined;
     let developmentScript: HTMLScriptElement | undefined;
@@ -30,7 +30,7 @@ let IsDevelopment = false;
     if (developmentScript === undefined) {
         Script = productionScript!;
     } else {
-        IsDevelopment = true;
+        HasDevInstance = true;
 
         if (productionScript !== undefined) {
             productionScript.remove();
@@ -100,4 +100,4 @@ export const ShowNotification = (html: string, variant: "info" | "success" | "wa
 };
 
 export const IsSpicetifyLoaded = () => AllSpicetifyLoaded || WaitForSpicetify();
-export { GlobalCleanup, SpotifyPlayer, SpotifyHistory, SpotifyPlaybar, HistoryLocation, Script, IsDevelopment };
+export { GlobalCleanup, SpotifyPlayer, SpotifyHistory, SpotifyPlaybar, HistoryLocation, Script, HasDevInstance };

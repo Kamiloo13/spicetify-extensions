@@ -1,6 +1,7 @@
 import Cleanup from "../services/Cleanup";
 import { CoverArtUpdated, GenerateBlurredCoverArt, GetBlurredCoverArt, GetCoverArt } from "../services/CoverArt";
 import { GlobalCleanup } from "../services/Session";
+import Spotify from "../services/Spotify";
 import Timeout from "../services/Timeout";
 
 import "../styles/main.scss";
@@ -8,7 +9,7 @@ import "../styles/main.scss";
 const UsePreBlurredApproach = false; // TODO: Add internal setting for this FIXME: it's jiggly as fuck
 
 const BackgroundSizeScales = [2, 3];
-const BackgroundElements = ["lyrics-background-color", "lyrics-background-back", "lyrics-background-back-center"];
+const BackgroundElements = ["lyrics-background-color", "lyrics-background-back", "lyrics-background-back-center"]; // Own class names
 const ElementSizeScaleIndices = [0, 0, 1];
 const BackgroundContainerResizeStabilizationTime = 0.25;
 
@@ -88,10 +89,8 @@ const ManageLyricsBackground = (container: HTMLDivElement) => {
 
         // Watch for size-updates
         const observer = BackgroundCleanup.AddObserver(
-            new ResizeObserver(() => {
-                // Set a timeout to update our sizes (once we stabilize it will properly run)
-                BackgroundCleanup.AddTask(Timeout(BackgroundContainerResizeStabilizationTime, UpdateSizes), "ContainerResize");
-            })
+            // Set a timeout to update our sizes (once we stabilize it will properly run)
+            new ResizeObserver(() => BackgroundCleanup.AddTask(Timeout(BackgroundContainerResizeStabilizationTime, UpdateSizes), "ContainerResize"))
         );
         observer.observe(backgroundContainer);
 
@@ -132,11 +131,9 @@ const ManageLyricsBackground = (container: HTMLDivElement) => {
     BackgroundCleanup.AddTask(() => container.classList.remove("lyrics-background"));
 };
 
-const FullScreenLyricsBackgroundClass = "lyrics-lyrics-background";
-
 let ExistingContainer: HTMLDivElement | null = null;
 const CheckForLiveBackgrounds = () => {
-    const fullScreenContainer = document.body.querySelector(`.${FullScreenLyricsBackgroundClass}`) as HTMLDivElement;
+    const fullScreenContainer = document.body.querySelector(`.${Spotify.FullScreenLyricsBackgroundClass}`) as HTMLDivElement;
 
     if (ExistingContainer === fullScreenContainer) {
         return;
@@ -150,7 +147,7 @@ const CheckForLiveBackgrounds = () => {
         fullScreenContainer.style.display = "none";
         ManageLyricsBackground(
             document.body
-                .querySelector(`.${FullScreenLyricsBackgroundClass}`)
+                .querySelector(`.${Spotify.FullScreenLyricsBackgroundClass}`)
                 ?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.querySelector(".under-main-view") as HTMLDivElement
         );
     }
