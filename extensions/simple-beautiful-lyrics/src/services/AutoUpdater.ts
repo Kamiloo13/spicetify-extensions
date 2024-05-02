@@ -61,6 +61,7 @@ const GetVersionDistance = (fromVersion: Version, toVersion: Version): [Version,
 
 const ExtensionVersion = GetVersionInformation(PackageVersion)!;
 
+let updateSuccess = false;
 // Handle applying our update
 const ApplyUpdate = (source: string) => {
     // First destroy our GlobalMaid
@@ -69,14 +70,16 @@ const ApplyUpdate = (source: string) => {
     // Find our existing-style and remove it
     document.querySelector("#simpleDbeautifulDlyrics")?.remove();
 
+    // Now remove our old script
+    Script.remove();
+
     // Now create our new script
     const newScript = document.createElement("script");
     newScript.setAttribute("type", "text/javascript");
     newScript.innerHTML = source;
     document.body.appendChild(newScript);
 
-    // Now remove our old script
-    Script.remove();
+    updateSuccess = true;
 };
 
 // Handle update-checking
@@ -94,12 +97,13 @@ const CheckForUpdate = async () => {
             // Grab our cached version
             const cachedVersion = GetVersionInformation(text);
             if (cachedVersion === undefined) {
+                console.warn("[simple-beautiful-lyrics] AutoUpdater: Unable to Parse Cached Version");
                 return;
             }
 
             const [versionDistance, isDifferent] = GetVersionDistance(ExtensionVersion, cachedVersion);
 
-            if (isDifferent && (cachedVersion.Major > 2 || (cachedVersion.Major == 2 && cachedVersion.Minor >= 4))) {
+            if (isDifferent && (versionDistance.Major > 0 || versionDistance.Minor >= 0 || versionDistance.Patch >= 0)) {
                 // Now send out the notifcation
                 ShowNotification(
                     "<h3>Simple Beautiful Lyrics Updated!</h3>" +
@@ -117,7 +121,9 @@ const CheckForUpdate = async () => {
             nextTimeoutDuration = NextSuccessfulUpdateCheck;
         })
         .catch((e) => console.warn(`Error: ${e}`))
-        .finally(() => GlobalCleanup.AddTask(Timeout(nextTimeoutDuration, CheckForUpdate), "CheckForUpdate"));
+        .finally(() => {
+            if (!updateSuccess) GlobalCleanup.AddTask(Timeout(nextTimeoutDuration, CheckForUpdate), "CheckForUpdate");
+        });
 };
 
 export const Start = () => {
