@@ -108,7 +108,7 @@ const CheckForUpdate = async () => {
                 ShowNotification(
                     "<h3>Simple Beautiful Lyrics Updated!</h3>" +
                         "<h4 style = 'margin-top: 4px; margin-bottom: 4px; font-weight: normal;'>No need to re-install - it's already running!</h4>" +
-                        `<span style = 'opacity: 0.75;'>Version ${ExtensionVersion.Text} -> ${cachedVersion.Text}</span>`,
+                        `<span style = 'opacity: 0.75;'>Version ${PackageVersion} -> ${cachedVersion.Text}</span>`,
                     versionDistance.Major > 0 ? "success" : versionDistance.Major < 0 || versionDistance.Minor < 0 || versionDistance.Patch < 0 ? "warning" : "info",
                     JustUpdatedNotificationLifetime
                 );
