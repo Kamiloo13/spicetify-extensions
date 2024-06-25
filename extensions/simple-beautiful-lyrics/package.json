@@ -7,6 +7,7 @@
         "build-local": "spicetify-creator --out=dist --minify",
         "watch": "spicetify-creator --watch",
         "start": "spicetify config extensions simple-beautiful-lyrics.js & spicetify apply enable-devtools",
+        "disable": "spicetify config extensions simple-beautiful-lyrics.js- & spicetify apply",
         "lint": "eslint .",
         "update-types": "curl -s -o ./src/types/spicetify.d.ts https://raw.githubusercontent.com/spicetify/spicetify-cli/master/globals.d.ts"
     },
