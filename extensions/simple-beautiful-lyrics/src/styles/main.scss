@@ -1,15 +1,36 @@
-$active-lyric-class: EhKgYshvOwpSrTv399Mw;
-$lyric-class: nw6rbs8R08fpPn7RWW2w;
+$active-lyric-classes: ("lyrics-lyricsContent-active", "EhKgYshvOwpSrTv399Mw", "arY01KDGhWNgzlAHlhpd");
+$lyric-classes: ("lyrics-lyricsContent-lyric", "nw6rbs8R08fpPn7RWW2w", "NiCdLCpp3o2z6nBrayOn");
 
 // We need to override the hover effect since we changed the way the text is filled-in
-.#{$lyric-class}:hover {
-    text-shadow: 0 0 0px var(--lyrics-color-active) !important;
+@each $class in $lyric-classes {
+    .#{$class}:hover {
+        text-shadow: 0 0 0px var(--lyrics-color-active) !important;
+    }
+
+    /*
+	We have to override the unsung lyric color since Spotifys black text doesn't work too well
+	with gradient-color backgrounds. It works with the solid-color background because the contrast
+	between the unsung text, the sung/active text, and the background itself is completely balanced.
+
+	With gradient backgrounds the contrast differs in many different places and black text creates
+	a stark inbalance in contrast between the white text and the varying contrast points in the gradient
+	background.
+
+	The color chosen is close to that of the already sung lyrics but fainter to create a more balanced
+	and distinguishable contrast between the sung and unsung lyrics.
+    */
+
+    .#{$class} {
+        --lyrics-color-inactive: rgb(240 240 240 / 51%) !important;
+    }
 }
 
 // When the active text grows in size we want more space between it and the surrounding lines
-.#{$active-lyric-class} {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
+@each $class in $active-lyric-classes {
+    .#{$class} {
+        margin-top: 0.25em;
+        margin-bottom: 0.25em;
+    }
 }
 
 // Improves scroll-bar
@@ -23,22 +44,6 @@ $lyric-class: nw6rbs8R08fpPn7RWW2w;
             background-color: rgba(252, 249, 249, 0.117) !important;
         }
     }
-}
-
-/*
-	We have to override the unsung lyric color since Spotifys black text doesn't work too well
-	with gradient-color backgrounds. It works with the solid-color background because the contrast
-	between the unsung text, the sung/active text, and the background itself is completely balanced.
-
-	With gradient backgrounds the contrast differs in many different places and black text creates
-	a stark inbalance in contrast between the white text and the varying contrast points in the gradient
-	background.
-
-	The color chosen is close to that of the already sung lyrics but fainter to create a more balanced
-	and distinguishable contrast between the sung and unsung lyrics.
-*/
-.#{$lyric-class} {
-    --lyrics-color-inactive: rgb(240 240 240 / 51%) !important;
 }
 
 // This is the entire lyrics configuration used to create the gradient backgrounds

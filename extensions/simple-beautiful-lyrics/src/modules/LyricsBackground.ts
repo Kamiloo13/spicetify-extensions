@@ -133,7 +133,7 @@ const ManageLyricsBackground = (container: HTMLDivElement) => {
 
 let ExistingContainer: HTMLDivElement | null = null;
 const CheckForLiveBackgrounds = () => {
-    const fullScreenContainer = document.body.querySelector(`.${Spotify.FullScreenLyricsBackgroundClass}`) as HTMLDivElement;
+    const fullScreenContainer = Spotify.getComponent<HTMLDivElement>("FullScreenLyricsBackgroundClass");
 
     if (ExistingContainer === fullScreenContainer) {
         return;
@@ -146,9 +146,7 @@ const CheckForLiveBackgrounds = () => {
         ExistingContainer = fullScreenContainer;
         fullScreenContainer.style.display = "none";
         ManageLyricsBackground(
-            document.body
-                .querySelector(`.${Spotify.FullScreenLyricsBackgroundClass}`)
-                ?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.querySelector(".under-main-view") as HTMLDivElement
+            fullScreenContainer?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.querySelector(".under-main-view") as HTMLDivElement
         );
     }
 };

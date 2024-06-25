@@ -34,12 +34,12 @@ const ManageLyricsContainer = (container: HTMLDivElement) => {
         for (const [lyric, data] of lyrics) {
             const classes = lyric.classList;
 
-            if (classes.contains(Spotify.ActiveLyricClass)) {
+            if (Spotify.checkClassNamesMatch(classes, "ActiveLyricClass")) {
                 data.State = "Active";
                 activeLayoutOrder = data.LayoutOrder;
-            } else if (classes.contains(Spotify.UnsyncedLyricClass)) {
+            } else if (Spotify.checkClassNamesMatch(classes, "UnsyncedLyricClass")) {
                 data.State = "Unsynced";
-            } else if (classes.contains(Spotify.HighlightedLyricClass)) {
+            } else if (Spotify.checkClassNamesMatch(classes, "HighlightedLyricClass")) {
                 data.State = "Sung";
             } else {
                 data.State = "Unsung";
@@ -105,7 +105,7 @@ const ManageLyricsContainer = (container: HTMLDivElement) => {
 
     // Grab our lyrics
     for (const node of container.childNodes) {
-        if (node instanceof HTMLDivElement && node.classList.contains(Spotify.LyricClass)) {
+        if (node instanceof HTMLDivElement && Spotify.checkClassNamesMatch(node.classList, "LyricClass")) {
             StoreLyric(node);
         }
     }
@@ -121,7 +121,7 @@ const ManageLyricsContainer = (container: HTMLDivElement) => {
 
 let ActiveLyricsContainer: HTMLDivElement | null = null;
 const CheckForLyricsContainers = () => {
-    const fullScreenContainer = document.body.querySelector(`.${Spotify.FullScreenLyricsContainerClass}`) as HTMLDivElement | null;
+    const fullScreenContainer = Spotify.getComponent<HTMLDivElement>("FullScreenLyricsContainerClass");
 
     if (ActiveLyricsContainer === fullScreenContainer) {
         return;
