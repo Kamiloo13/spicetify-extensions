@@ -1,6 +1,5 @@
 // Initial Services
 import { GlobalCleanup, HasDevInstance, IsSpicetifyLoaded } from "./services/Session";
-import { Start as StartAutoUpdater } from "./services/AutoUpdater";
 import { Start as StartCoverArt } from "./services/CoverArt";
 import { CheckForLiveBackgrounds } from "./modules/LyricsBackground";
 import { Start as StartCheckLyrics, CheckForLyricsContainers } from "./modules/LyricsContainer";
@@ -14,7 +13,6 @@ async function main() {
     // Comment this out in development mode
     if (HasDevInstance) return;
 
-    StartAutoUpdater();
     StartCoverArt();
     Player.Start();
 
