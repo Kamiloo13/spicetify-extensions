@@ -15,12 +15,12 @@ let CoverArt: CoverArt | undefined;
 const BlurSizeIncrease = 1.25;
 const BlurSize = 40;
 
-const CoverArtContainerFilters: Map<CoverArtContainer | "Default", string> = new Map();
+const CoverArtContainerFilters = new Map<CoverArtContainer | "Default", string>();
 CoverArtContainerFilters.set("Default", "brightness(0.5) saturate(2.5)");
 CoverArtContainerFilters.set("SidePanel", "brightness(1) saturate(2.25)");
 
 // Store our Blurred-CoverArt
-const BlurredCoverArts: Map<string, Map<CoverArtContainer, Map<number, string>>> = new Map();
+const BlurredCoverArts = new Map<string, Map<CoverArtContainer, Map<number, string>>>();
 
 // Handle generating blurred-images
 const GetCoverArtURLToBlur = (coverArt: CoverArt) => {

@@ -2,7 +2,7 @@ import tseslint from "typescript-eslint";
 
 let mergedRules = {};
 
-tseslint.configs.recommended.forEach((ruleset) => {
+tseslint.configs.stylistic.forEach((ruleset) => {
     if (ruleset.rules !== undefined) {
         Object.assign(mergedRules, ruleset.rules);
     }
@@ -16,12 +16,12 @@ export default [
     {
         name: "typescript-eslint",
         files: ["**/*.ts"],
-        ignores: ["**/*.d.ts", "shared/**/*"],
+        ignores: ["**/*.d.ts"],
         languageOptions: {
             parser: tseslint.parser,
+            sourceType: "module",
             parserOptions: {
                 ecmaVersion: "latest",
-                sourceType: "module",
                 project: "./tsconfig.json"
             }
         },

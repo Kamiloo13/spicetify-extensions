@@ -1,5 +1,5 @@
 class Signal {
-    private listeners: Array<() => void> = [];
+    private listeners: (() => void)[] = [];
 
     public Connect(listener: () => void): () => void {
         this.listeners.push(listener);

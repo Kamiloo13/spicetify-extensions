@@ -15,14 +15,14 @@ const LyricsCleanup = GlobalCleanup.AddSubCleanup(new Cleanup(), "Lyrics");
 
 const ManageLyricsContainer = (container: HTMLDivElement) => {
     // Create our storage for each lyric
-    type LyricsData = {
+    interface LyricsData {
         LayoutOrder: number;
         State: LyricState;
-    };
-    const lyrics: Map<HTMLDivElement, LyricsData> = new Map();
+    }
+    const lyrics = new Map<HTMLDivElement, LyricsData>();
 
     // Handle updating our lyrics
-    let fontSizeInRem: number = 0;
+    let fontSizeInRem = 0;
 
     const UpdateFontSize = (lyric: HTMLDivElement, data: LyricsData) => {
         lyric.style.fontSize = data.State == "Active" ? `${fontSizeInRem + ActiveLyricSizeIncrease}rem` : "";
@@ -30,7 +30,7 @@ const ManageLyricsContainer = (container: HTMLDivElement) => {
 
     const Update = () => {
         // Go through our lyrics and update their states (and also gather our active layout-order)
-        let activeLayoutOrder: number = 0;
+        let activeLayoutOrder = 0;
         for (const [lyric, data] of lyrics) {
             const classes = lyric.classList;
 

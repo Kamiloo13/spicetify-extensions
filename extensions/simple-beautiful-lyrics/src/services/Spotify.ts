@@ -8,10 +8,10 @@ class Spotify {
     static ComponentClasses = {
         // Background
         FullScreenLyricsBackgroundClass: ["lyrics-lyrics-background", "o4GE4jG5_QICak2JK_bn", "L9xhJOJnV2OL5Chm3Jew"],
-        
+
         // Lyrics Container
         FullScreenLyricsContainerClass: ["lyrics-lyrics-contentWrapper", "_Wna90no0o0dta47Heiw", "esRByMgBY3TiENAsbDHA"],
-        
+
         // Lyrics
         LyricClass: ["lyrics-lyricsContent-lyric", "nw6rbs8R08fpPn7RWW2w", "NiCdLCpp3o2z6nBrayOn"],
         UnsyncedLyricClass: ["lyrics-lyricsContent-unsynced", "SruqsAzX8rUtY2isUZDF", "HxblHEsl2WX2yhubfVIc"],
