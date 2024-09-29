@@ -25,6 +25,11 @@ async function main() {
 
     observer.observe(document.body, { attributes: false, childList: true, subtree: true });
 
+    // Fix the lyrics-cinema mode
+    const lyricsCinema = document.querySelector<HTMLDivElement>("#lyrics-cinema");
+    lyricsCinema?.style.setProperty("grid-area", "main-view / main-view / main-view / right-sidebar");
+    lyricsCinema?.style.setProperty("overflow", "hidden");
+
     // Check for initial elements
     CheckForLiveBackgrounds();
     StartCheckLyrics();

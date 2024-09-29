@@ -12,6 +12,9 @@ class Spotify {
         // Lyrics Container
         FullScreenLyricsContainerClass: ["lyrics-lyrics-contentWrapper", "_Wna90no0o0dta47Heiw", "esRByMgBY3TiENAsbDHA"],
 
+        // Sidebar Lyrics Background
+        SidebarLyricsBackgroundClass: ["main-nowPlayingView-lyricsGradient", "main-nowPlayingView-lyricsGradient", "main-nowPlayingView-lyricsGradient"],
+
         // Lyrics
         LyricClass: ["lyrics-lyricsContent-lyric", "nw6rbs8R08fpPn7RWW2w", "NiCdLCpp3o2z6nBrayOn"],
         UnsyncedLyricClass: ["lyrics-lyricsContent-unsynced", "SruqsAzX8rUtY2isUZDF", "HxblHEsl2WX2yhubfVIc"],
