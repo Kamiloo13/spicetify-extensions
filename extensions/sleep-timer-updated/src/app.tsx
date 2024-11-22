@@ -25,7 +25,7 @@ const setIsMenuActive = (value: boolean) => {
 };
 
 const updateDOM = () => {
-    ReactDOM.render(<SleepTimerMenu isVisible={isMenuActive} setIsMenuActive={setIsMenuActive} updateDom={updateDOM} sleepTimerButton={sleepTimerButton}/>, SleepMenuContainer);
+    ReactDOM.render(<SleepTimerMenu isVisible={isMenuActive} setIsMenuActive={setIsMenuActive} updateDom={updateDOM} sleepTimerButton={sleepTimerButton} />, SleepMenuContainer);
 };
 
 // Main function

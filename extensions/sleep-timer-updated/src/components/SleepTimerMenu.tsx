@@ -91,7 +91,7 @@ const SleepTimerMenu: React.FC<SleepTimerMenuProps> = ({ isVisible, updateDom, s
 
         if (secondsRemaining <= 0) {
             disableSleepTimer();
-            if (Spicetify.Player.isPlaying()) Spicetify.Player.pause();
+            if (Spicetify.Player.isPlaying()) startPauseProcess();
         }
     }
 
@@ -99,6 +99,27 @@ const SleepTimerMenu: React.FC<SleepTimerMenuProps> = ({ isVisible, updateDom, s
         clearInterval(sleepTimerRef.current.timer);
         UpdateSleepTimerRef({ type: "disabled", count: 0 });
         sleepTimerButton.label = "Sleep Timer";
+    }
+
+    function startPauseProcess() {
+        const currentVolume = Spicetify.Player.getVolume();
+        const fadeOutTime = 15000;
+        const fadeOutInterval = 100;
+        const fadeOutSteps = fadeOutTime / fadeOutInterval;
+        const fadeOutVolumeStep = currentVolume / fadeOutSteps;
+
+        let volume = currentVolume;
+        const fadeOutTimer = setInterval(() => {
+            volume -= fadeOutVolumeStep;
+            Spicetify.Player.setVolume(volume);
+            if (volume <= 0) {
+                clearInterval(fadeOutTimer);
+                Spicetify.Player.pause();
+                setTimeout(() => {
+                    Spicetify.Player.setVolume(currentVolume);
+                }, 500);
+            }
+        }, fadeOutInterval);
     }
 
     if (!isVisible) {
