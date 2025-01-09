@@ -201,7 +201,7 @@ const CheckForLiveBackgroundsMain = () => {
         BackgroundMainCleanup.Clean();
     } else {
         ExistingContainerMain = fullScreenContainer;
-        fullScreenContainer.style.display = "none";
+        fullScreenContainer.style.background = "linear-gradient(90deg, #0a0a0a8a, #0000)";
         ManageLyricsBackground(
             fullScreenContainer?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.querySelector(".under-main-view") as HTMLDivElement
         );
