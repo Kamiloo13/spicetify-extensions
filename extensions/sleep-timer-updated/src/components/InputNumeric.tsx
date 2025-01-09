@@ -20,6 +20,11 @@ const InputNumeric: React.FC<InputNumericProps> = ({ numericValue, setNumericVal
         setNumericValue(Math.max(Math.min(value, 999), 1));
     };
 
+    const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+        event.target.select();
+        setRadioValue(idTextValue);
+    };
+
     const startInterval = (method: () => void) => {
         function loop() {
             method();
@@ -66,6 +71,7 @@ const InputNumeric: React.FC<InputNumericProps> = ({ numericValue, setNumericVal
                     <input
                         type="text"
                         value={numericValue}
+                        onFocus={handleFocus}
                         onChange={(e) => onChangeHandler(parseInt(e.target.value) || 0)}
                         onKeyDown={isNumber}
                         onPaste={(e) => e.preventDefault()}
