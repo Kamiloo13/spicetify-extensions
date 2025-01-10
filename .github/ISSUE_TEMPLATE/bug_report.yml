@@ -1,4 +1,4 @@
-name: Bug report
+name: 🐛 Bug report
 description: Report errors or unexpected behaviour
 labels: bug
 title: "[Bug] <Extension name>:"
@@ -27,7 +27,6 @@ body:
     attributes:
       label: ℹ Environment / Computer Info
       description: Please copy the information about your Spotify. To do so open Spotify app, click on three dots **(...)** in the top-left corner > **help** > **information about spotify** > click the **copy** button and paste it here.
-      value: |
       placeholder: |
         Spotify for Windows (64-bit)
         1.2.53.440.g7b2f582a
