@@ -4,33 +4,33 @@ labels: bug
 title: "[Bug] <Extension name>:"
 assignees: Kamiloo13
 body:
-  - type: checkboxes
-    attributes:
-      label: 🔍 Is there already an issue for your problem?
-      description: Please make sure you are not creating an already submitted <a href="https://github.com/Kamiloo13/spicetify-extensions/issues">Issue</a>.
-      options:
-        - label: I have checked open issues
+    - type: checkboxes
+      attributes:
+          label: 🔍 Is there already an issue for your problem?
+          description: Please make sure you are not creating an already submitted <a href="https://github.com/Kamiloo13/spicetify-extensions/issues">Issue</a>.
+          options:
+              - label: I have checked open issues
+                required: true
+    - type: textarea
+      attributes:
+          label: 📝 Description
+          description: List steps to reproduce the error and details on what happens and what you expected to happen.
+      validations:
           required: true
-  - type: textarea
-    attributes:
-      label: 📝 Description
-      description: List steps to reproduce the error and details on what happens and what you expected to happen.
-    validations:
-      required: true
-  - type: textarea
-    attributes:
-      label: 📸 Screenshots
-      description: Place any screenshots of the issue here if needed
-    validations:
-      required: false
-  - type: textarea
-    attributes:
-      label: ℹ Environment / Computer Info
-      description: Please copy the information about your Spotify. To do so open Spotify app, click on three dots **(...)** in the top-left corner > **help** > **information about spotify** > click 🔽 next to spicetify version > click the **copy** button and paste it here.
-      placeholder: |
-        Spotify for Windows (64-bit)
-        1.2.53.440.g7b2f582a
-        Spicetify v2.38.7
-      render: Markdown
-    validations:
-      required: false
+    - type: textarea
+      attributes:
+          label: 📸 Screenshots
+          description: Place any screenshots of the issue here if needed
+      validations:
+          required: false
+    - type: textarea
+      attributes:
+          label: ℹ Environment / Computer Info
+          description: Please copy the information about your Spotify. To do so open Spotify app, click on three dots **(...)** in the top-left corner > **help** > **information about spotify** > click 🔽 next to spicetify version > click the **copy** button and paste it here.
+          placeholder: |
+              Spotify for Windows (64-bit)
+              1.2.53.440.g7b2f582a
+              Spicetify v2.38.7
+          render: Markdown
+      validations:
+          required: false
