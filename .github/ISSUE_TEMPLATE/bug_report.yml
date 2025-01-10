@@ -9,7 +9,7 @@ body:
       label: 🔍 Is there already an issue for your problem?
       description: Please make sure you are not creating an already submitted <a href="https://github.com/Kamiloo13/spicetify-extensions/issues">Issue</a>.
       options:
-        - label: I have checked older issues, open and closed
+        - label: I have checked open issues
           required: true
   - type: textarea
     attributes:
@@ -26,7 +26,7 @@ body:
   - type: textarea
     attributes:
       label: ℹ Environment / Computer Info
-      description: Please copy the information about your Spotify. To do so open Spotify app, click on three dots **(...)** in the top-left corner > **help** > **information about spotify** > click the **copy** button and paste it here.
+      description: Please copy the information about your Spotify. To do so open Spotify app, click on three dots **(...)** in the top-left corner > **help** > **information about spotify** > click 🔽 next to spicetify version > click the **copy** button and paste it here.
       placeholder: |
         Spotify for Windows (64-bit)
         1.2.53.440.g7b2f582a
