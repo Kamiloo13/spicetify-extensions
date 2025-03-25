@@ -4,6 +4,9 @@ import { Start as StartCoverArt } from "./services/CoverArt";
 import { CheckForLiveBackgrounds } from "./modules/LyricsBackground";
 import { Start as StartCheckLyrics, CheckForLyricsContainers } from "./modules/LyricsContainer";
 import Player from "./services/Player";
+import { toggleFetchOverride } from "./services/FetchOv";
+
+import { SettingsSection } from "spcr-settings";
 
 async function main() {
     while (!IsSpicetifyLoaded()) {
@@ -12,6 +15,19 @@ async function main() {
 
     // Comment this out in development mode
     if (HasDevInstance) return;
+
+    const settings = new SettingsSection("Simple Beautiful Lyrics", "simple-beautiful-lyrics");
+
+    // Add settings
+    settings.addToggle("simbea-lyrics-fetch", "Override Spotify's 'fetch' function to enable searching for alternative lyric sources", true, () => {
+        const fetchOverrideToggle = Boolean(settings.getFieldValue("simbea-lyrics-fetch"));
+        toggleFetchOverride(fetchOverrideToggle);
+    });
+    settings.pushSettings();
+
+    // Read settings
+    const fetchOverrideToggle = Boolean(settings.getFieldValue("simbea-lyrics-fetch"));
+    toggleFetchOverride(fetchOverrideToggle);
 
     StartCoverArt();
     Player.Start();

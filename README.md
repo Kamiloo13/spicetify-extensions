@@ -10,6 +10,13 @@ Extensions made for [Spicetify CLI](https://github.com/spicetify/spicetify-cli).
 
 Found a bug or have an idea? Feel free to submit an issue or a pull request!
 
+
+> Starting from **Version 1.2** of **[Simple Beautiful Lyrics](extensions/simple-beautiful-lyrics)**, you'll have the ability to directly contribute to the project by adding missing lyrics! 
+>
+> If you know any lyrics providers that offer a **free API**, feel free to submit a suggestion with the details. I'll be happy to add it to the extension.
+>
+> #### MORE INFO IN RESPECTIVE FOLDERS
+
 ---
 
 #### Made with [Spicetify Creator](https://github.com/spicetify/spicetify-creator)

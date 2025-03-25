@@ -13,8 +13,45 @@ Enhance your full-screen song lyrics experience with this simple theme for Spoti
 > **This project is a fork of a plugin made by [surfbryce](https://github.com/surfbryce) - [Beautiful Lyrics](https://github.com/surfbryce/beautiful-lyrics)**
 > Please check out the original project for even more features. This fork mainly focuses on being lightweight with minimal external packages and APIs.
 
+### Settings
+
+> Click on **Profile Pic > Settings > Simple Beautiful Lyrics**
+
+| Type     | Description                                                                            | Default State |
+| -------- | -------------------------------------------------------------------------------------- | ------------- |
+| ⚙️Toggle | Overrides Spotify's `fetch` function to enable searching for alternative lyric sources | ✅ On         |
+
 ### Contributing
 
 Found a bug or have an idea? Feel free to submit an issue or a pull request!
 
-> The main version of **Beautiful Lyrics** is, in my opinion a bit difficult to contribute, becouse it uses a lot of external APIs and packages. This fork is meant to be simpler.
+> Starting from **version 1.2**, you'll have the ability to directly contribute to the project by adding missing lyrics. 
+>
+> If you know any lyrics providers that offer a **free API**, feel free to submit a issue with the details. I'll be happy to add it to the extension.
+
+In the next couple of days I'll be adding an **editor** for the lyrics, so you can easily contribute to the project. It should look something like the **Musixmatch** editor and it will be available on **github pages** or my domain.
+
+### Changelog
+
+<details open>
+    <summary><b>Version 1.2</b></summary>
+
+    - Added settings package (spcr-settings)
+    - Added support for third-party lyrics provider (https://lrclib.net/)
+     (Right now it's the only provider, but I'm planning to add
+      more in the future. At the moment, request are sent directly
+      from the client to the LRClib API. However, I'm planning to
+      implement a proxy/cache layer to reduce the amount of requests and
+      have some control over quality)
+
+</details>
+
+<details open>
+    <summary><b>Version 1.1</b></summary>
+
+    - Initial release
+    - Bug fixes, optimizations and style improvements
+    - Autoupdater removed
+    - Added NowPlaying siderbar support
+
+</details>
