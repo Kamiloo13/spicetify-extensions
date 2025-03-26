@@ -1,17 +1,11 @@
 import Cleanup from "../services/Cleanup";
-import { CoverArtUpdated, GenerateBlurredCoverArt, GetBlurredCoverArt, GetCoverArt } from "../services/CoverArt";
+import { CoverArtUpdated, GetCoverArt } from "../services/CoverArt";
 import { GlobalCleanup } from "../services/Session";
 import Spotify from "../services/Spotify";
-import Timeout from "../services/Timeout";
 
 import "../styles/main.scss";
 
-const UsePreBlurredApproach = false; // TODO: Add internal setting for this FIXME: it's jiggly as fuck
-
-const BackgroundSizeScales = [2, 3];
 const BackgroundElements = ["lyrics-background-color", "lyrics-background-back", "lyrics-background-back-center"]; // Own class names
-const ElementSizeScaleIndices = [0, 0, 1];
-const BackgroundContainerResizeStabilizationTime = 0.25;
 
 const BackgroundMainCleanup = GlobalCleanup.AddSubCleanup(new Cleanup(), "LiveMainBackgrounds");
 const BackgroundSidebarCleanup = GlobalCleanup.AddSubCleanup(new Cleanup(), "LiveSidebarBackgrounds");
@@ -33,80 +27,14 @@ const ManageLyricsBackground = (container: HTMLDivElement) => {
         elements.push(image as HTMLImageElement);
     }
 
-    let UpdateCoverArt: Callback;
+    const UpdateCoverArt = () => {
+        const coverArt = GetCoverArt();
+        const source = coverArt?.Default ?? "";
 
-    if (UsePreBlurredApproach) {
-        let currentSizes: number[] = [];
-
-        const SetCoverArt = (blurredCoverArt?: Map<number, string>) => {
-            for (const [index, element] of elements.entries()) {
-                element.src = blurredCoverArt ? blurredCoverArt.get(currentSizes[ElementSizeScaleIndices[index]]) ?? "MISSING" : "";
-            }
-        };
-
-        UpdateCoverArt = () => {
-            // Grab our cover-art
-            const coverArt = GetCoverArt();
-            if (coverArt === undefined) {
-                return SetCoverArt();
-            }
-
-            for (const element of elements) {
-                element.src = coverArt.Default;
-            }
-
-            // Now determine if we already have this or not
-            const cachedCoverArtSizes = GetBlurredCoverArt(coverArt, "LyricsPlusFullScreen", currentSizes);
-
-            // If we have it we can then update immediately, otherwise we need to generate it
-            if (cachedCoverArtSizes === undefined) {
-                GenerateBlurredCoverArt(coverArt, "LyricsPlusFullScreen", currentSizes).then((coverArtSizes) => {
-                    // Make sure we are seeing the same cover-art
-                    if (coverArt === GetCoverArt()) {
-                        SetCoverArt(coverArtSizes);
-                    }
-                });
-            } else {
-                SetCoverArt(cachedCoverArtSizes);
-            }
-        };
-
-        const UpdateSizes = () => {
-            // Calculate our existing width
-            const backgroundContainerWidth = backgroundContainer.offsetWidth;
-
-            // Calculate our new sizes
-            const newSizes = [];
-            for (const scale of BackgroundSizeScales) {
-                newSizes.push(Math.floor(backgroundContainerWidth * scale));
-            }
-
-            // Now set our sizes
-            currentSizes = newSizes;
-
-            // Trigger cover-art update
-            UpdateCoverArt();
-        };
-
-        // Watch for size-updates
-        const observer = BackgroundMainCleanup.AddObserver(
-            // Set a timeout to update our sizes (once we stabilize it will properly run)
-            new ResizeObserver(() => BackgroundMainCleanup.AddTask(Timeout(BackgroundContainerResizeStabilizationTime, UpdateSizes), "ContainerResize"))
-        );
-        observer.observe(backgroundContainer);
-
-        // Immediately update our sizes
-        UpdateSizes();
-    } else {
-        UpdateCoverArt = () => {
-            const coverArt = GetCoverArt();
-            const source = coverArt?.Default ?? "";
-
-            for (const element of elements) {
-                element.src = source;
-            }
-        };
-    }
+        for (const element of elements) {
+            element.src = source;
+        }
+    };
 
     BackgroundMainCleanup.AddTask(CoverArtUpdated.Connect(UpdateCoverArt));
     UpdateCoverArt();

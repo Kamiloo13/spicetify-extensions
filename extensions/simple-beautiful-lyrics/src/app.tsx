@@ -3,31 +3,38 @@ import { GlobalCleanup, HasDevInstance, IsSpicetifyLoaded } from "./services/Ses
 import { Start as StartCoverArt } from "./services/CoverArt";
 import { CheckForLiveBackgrounds } from "./modules/LyricsBackground";
 import { Start as StartCheckLyrics, CheckForLyricsContainers } from "./modules/LyricsContainer";
+import { SettingsSection } from "./modules/SettingsSection";
 import Player from "./services/Player";
-import { toggleFetchOverride } from "./services/FetchOv";
-
-import { SettingsSection } from "spcr-settings";
+import { toggleFetchOverride, clearLyricsCache } from "./services/FetchOv";
+import { setLogEnabled } from "./services/Logger";
 
 async function main() {
-    while (!IsSpicetifyLoaded()) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-
     // Comment this out in development mode
     if (HasDevInstance) return;
 
     const settings = new SettingsSection("Simple Beautiful Lyrics", "simple-beautiful-lyrics");
 
     // Add settings
-    settings.addToggle("simbea-lyrics-fetch", "Override Spotify's 'fetch' function to enable searching for alternative lyric sources", true, () => {
-        const fetchOverrideToggle = Boolean(settings.getFieldValue("simbea-lyrics-fetch"));
+    settings.addToggle("override-fetch", "Override Spotify's 'fetch' function to enable searching for alternative lyric sources (app refresh recommended)", true, () => {
+        const fetchOverrideToggle = Boolean(settings.getFieldValue("override-fetch"));
         toggleFetchOverride(fetchOverrideToggle);
+    });
+    settings.addToggle("enable-debug", "Enable debug logging", false, () => {
+        setLogEnabled(Boolean(settings.getFieldValue("enable-debug")));
+    });
+    settings.addButton("clear-cache", "Clear Lyrics Cache", "Clear", () => {
+        clearLyricsCache();
+        Spicetify.showNotification("Lyrics cache cleared!");
     });
     settings.pushSettings();
 
     // Read settings
-    const fetchOverrideToggle = Boolean(settings.getFieldValue("simbea-lyrics-fetch"));
-    toggleFetchOverride(fetchOverrideToggle);
+    setLogEnabled(Boolean(settings.getFieldValue("enable-debug")));
+    toggleFetchOverride(Boolean(settings.getFieldValue("override-fetch")));
+
+    while (!IsSpicetifyLoaded()) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+    }
 
     StartCoverArt();
     Player.Start();

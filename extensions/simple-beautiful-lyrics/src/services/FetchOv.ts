@@ -1,41 +1,12 @@
-const f = window.fetch;
+import { LyricCached, LyricsResponse, SpMetadataFetch } from "../types/fetch";
+import { log } from "./Logger";
 
-interface LyricsSynched {
-    startTimeMs: string;
-    words: string;
-    syllables: string[];
-    endTimeMs: string;
-}
+const fetchFunction = window.fetch;
 
-interface LyricCached {
-    gid: string;
-    canonical_id: string;
-    data?: {
-        colors: {
-            background: number;
-            highlightText: number;
-            text: number;
-        };
-        hasVocalRemoval: boolean;
-        lyrics: {
-            alternatives: [];
-            capStatus: string;
-            isDenseTypeface: boolean;
-            isRtlLanguage: boolean;
-            isSnippet: boolean;
-            language: string;
-            lines: LyricsSynched[];
-            previewLines: LyricsSynched[];
-            provider: string;
-            providerLyricsDisplayName: string;
-            providerLyricsId: string;
-            syncLyricsUri: string;
-            syncType: "LINE_SYNCED" | "UNSYNCED";
-        };
-    };
-}
-
+const MAX_CACHE_SIZE = 100;
+const KEY = "simple-beautiful-lyrics:cache-lyrics";
 const LyricsDataBank: LyricCached[] = [];
+
 let RequestCount = 0;
 let CurrentRequestId = 0;
 
@@ -49,26 +20,76 @@ const checkOverflow = () => {
     }
 };
 
+const waitForTurn = async (myRequestId: number) => {
+    const start = Date.now();
+    while (myRequestId > CurrentRequestId) {
+        if (Date.now() - start > 7500) throw new Error("Timeout in waitForTurn");
+        await new Promise((res) => setTimeout(res, 100));
+    }
+};
+
+const saveLyricsToCache = () => {
+    Spicetify.LocalStorage.set(KEY, JSON.stringify(LyricsDataBank));
+    log("Lyrics Data Bank saved to cache");
+};
+
+const addToCache = (data: LyricCached) => {
+    if (!LyricsDataBank.find((x) => x.canonical_id === data.canonical_id)) {
+        if (LyricsDataBank.length >= MAX_CACHE_SIZE) {
+            LyricsDataBank.shift();
+            log("Lyrics Data Bank overflowed, removing oldest entry");
+        }
+
+        LyricsDataBank.push(data);
+        saveLyricsToCache();
+    } else log(`Lyrics already exist in 'bank' <${data.canonical_id}>`);
+};
+
+const clearLyricsCache = () => {
+    LyricsDataBank.length = 0;
+    Spicetify.LocalStorage.remove(KEY);
+    log("Lyrics Data Bank cleared");
+};
+
+const loadLyricsFromCache = () => {
+    const cachedData = Spicetify.LocalStorage.get(KEY);
+    if (cachedData) {
+        try {
+            LyricsDataBank.length = 0;
+            LyricsDataBank.push(...(JSON.parse(cachedData) as LyricCached[]));
+            log("Lyrics Data Bank loaded from cache");
+        } catch (e) {
+            console.error("[SBL]: Error while parsing cached data", e);
+            clearLyricsCache();
+        }
+    }
+};
+
 const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestInit | undefined]): Promise<Response> => {
     const url = args[0];
     if (typeof url === "string") {
         if (url.startsWith("https://spclient.wg.spotify.com/color-lyrics/v2/track/")) {
-            const cannonicalId = url.split("/").at(6);
+            const canonicalId = url.split("/").at(6);
 
-            if (!cannonicalId) {
-                console.error("[SBL]: Cannonical ID not found in 'color-lyrics' fetch");
-                return f(...args);
+            if (!canonicalId) {
+                console.error("[SBL]: Canonical ID not found in 'color-lyrics' fetch");
+                return fetchFunction(...args);
             }
 
             checkOverflow();
-            const MyRequestId = RequestCount++;
-            while (MyRequestId > CurrentRequestId) await new Promise((resolve) => setTimeout(resolve, 500));
+            try {
+                await waitForTurn(RequestCount++);
+            } catch (e) {
+                console.error("[SBL]:", e);
+                CurrentRequestId++;
+                return fetchFunction(...args);
+            }
 
-            const lyrics = LyricsDataBank.find((x) => x.canonical_id === cannonicalId);
+            const lyrics = LyricsDataBank.find((x) => x.canonical_id === canonicalId);
             CurrentRequestId++;
 
             if (lyrics && lyrics.data) {
-                console.log(`[SBL]: Lyrics found in 'bank' <${cannonicalId}>`);
+                log(`Lyrics found in 'bank' <${canonicalId}>`);
                 return new Response(JSON.stringify(lyrics.data), {
                     status: 200,
                     statusText: "OK",
@@ -78,46 +99,54 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                 });
             }
 
-            console.log(`[SBL]: Lyrics not found in 'bank' <${cannonicalId}>`);
-            return f(...args);
+            log(`Lyrics not found in 'bank' <${canonicalId}>`);
+            return fetchFunction(...args);
         } else if (url.startsWith("https://spclient.wg.spotify.com/metadata/4/track/")) {
             const gId = url.split("/").at(6)?.split("?").at(0)!;
 
             if (!gId) {
                 console.error("[SBL]: GID not found in 'metadata' fetch");
-                return f(...args);
+                return fetchFunction(...args);
             }
 
             checkOverflow();
-            const MyRequestId = RequestCount++;
-            while (MyRequestId > CurrentRequestId) await new Promise((resolve) => setTimeout(resolve, 500));
+            try {
+                await waitForTurn(RequestCount++);
+            } catch (e) {
+                console.error("[SBL]:", e);
+                CurrentRequestId++;
+                return fetchFunction(...args);
+            }
 
             const lyrics = LyricsDataBank.find((x) => x.gid === gId);
-            const response = await f(...args);
 
             if (lyrics) {
                 CurrentRequestId++;
                 if (lyrics.data) {
-                    console.log(`[SBL]: Lyrics found in 'bank' when fetching for 'metadata' <${gId}>`);
-                    return new Response(JSON.stringify(lyrics), {
-                        status: 200,
-                        statusText: "OK",
-                        headers: new Headers({
-                            "Content-Type": "application/json"
-                        })
+                    log(`Lyrics found in 'bank' when fetching for 'metadata' <${gId}>`);
+
+                    const response = await fetchFunction(...args);
+                    const data = (await response.clone().json()) as SpMetadataFetch;
+                    data.has_lyrics = true;
+
+                    return new Response(JSON.stringify(data), {
+                        status: response.status,
+                        statusText: response.statusText,
+                        headers: response.headers
                     });
                 }
 
-                console.log(`[SBL]: Lyrics found in 'bank' but no data when fetching for 'metadata' <${gId}>`);
-                return response;
+                log(`Lyrics found in 'bank' but no lyrics were available when fetching for 'metadata' <${gId}>`);
+                return fetchFunction(...args);
             }
 
+            const response = await fetchFunction(...args);
             const data = (await response.clone().json()) as SpMetadataFetch;
             const canonicalId = data.canonical_uri.split(":").at(-1)!;
 
             if (data.has_lyrics) {
-                console.log(`[SBL]: Lyrics found in 'metadata' <${gId}>`);
-                LyricsDataBank.push({
+                log(`Lyrics found in 'metadata' <${gId}>`);
+                addToCache({
                     gid: gId,
                     canonical_id: canonicalId
                 });
@@ -126,22 +155,17 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                 return response;
             }
 
-            const apiResponse = await f(
-                `https://lrclib.net/api/get?${new URLSearchParams({
-                    artist_name: data.artist[0].name,
-                    track_name: data.name,
-                    ...(data.album.name && { album_name: data.album.name }),
-                    ...(data.duration && { duration: Math.round(data.duration / 1000).toString() })
-                }).toString()}`
+            const apiResponse = await fetchFunction(
+                `https://lyrics.kamiloo13.me/api/get?artist=${data.artist[0].name}&track=${data.name}&duration=${Math.round(data.duration / 1000)}&album=${data.album.name}`
             ).catch(() => null);
 
-            const apiLyrics = (await apiResponse?.json()) as LRCLibResponse | null;
+            const apiLyrics = (await apiResponse?.json().catch(() => null)) as LyricsResponse | null;
 
             CurrentRequestId++;
-            if (!apiLyrics || apiLyrics.statusCode === 404) {
-                console.warn(`[SBL]: Lyrics not found in 'lrclib.net' <${gId}>`);
+            if (!apiLyrics || !apiResponse?.ok) {
+                log(`Lyrics NOT found in 'lyrics.kamiloo13.me' <${gId}>`);
 
-                LyricsDataBank.push({
+                addToCache({
                     gid: gId,
                     canonical_id: canonicalId
                 });
@@ -149,31 +173,8 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                 return response;
             }
 
-            console.log(`[SBL]: Lyrics found in 'lrclib.net' <${gId}>`);
+            log(`Lyrics found in 'lyrics.kamiloo13.me' <${gId}>`);
 
-            const parseTime = (time: string) => {
-                const [min, sec] = time.split(":");
-                const [s, ms = "0"] = sec.split(".");
-                return (+min * 60 + +s) * 1000 + +ms.padEnd(3, "0").slice(0, 3);
-            };
-
-            const lyrs =
-                apiLyrics.syncedLyrics?.split("\n").map((x) => {
-                    const [timePart, ...words] = x.split("]");
-
-                    return {
-                        startTimeMs: parseTime(timePart.slice(1)).toString(),
-                        words: words.join(" "),
-                        syllables: [],
-                        endTimeMs: "0"
-                    };
-                }) ??
-                apiLyrics.plainLyrics.split("\n").map((x) => ({
-                    startTimeMs: "0",
-                    words: x,
-                    syllables: [],
-                    endTimeMs: "0"
-                }));
             const lyricsData: LyricCached["data"] = {
                 colors: {
                     background: 0,
@@ -188,17 +189,17 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                     isRtlLanguage: false,
                     isSnippet: false,
                     language: data.language_of_performance[0],
-                    lines: lyrs,
-                    previewLines: lyrs.slice(0, 5),
-                    provider: "lrclib.net",
-                    providerLyricsDisplayName: "LRCLib",
-                    providerLyricsId: apiLyrics.id.toString(),
+                    lines: apiLyrics.lines,
+                    previewLines: apiLyrics.lines.slice(0, 5),
+                    provider: apiLyrics.provider,
+                    providerLyricsDisplayName: apiLyrics.providerLyricsDisplayName,
+                    providerLyricsId: apiLyrics.providerLyricsId,
                     syncLyricsUri: "",
-                    syncType: apiLyrics.syncedLyrics ? "LINE_SYNCED" : "UNSYNCED"
+                    syncType: apiLyrics.isSynced ? "LINE_SYNCED" : "UNSYNCED"
                 }
             };
 
-            LyricsDataBank.push({
+            addToCache({
                 gid: gId,
                 canonical_id: canonicalId,
                 data: lyricsData
@@ -214,14 +215,33 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
         }
     }
 
-    return f(...args);
+    return fetchFunction(...args);
 };
 
 const toggleFetchOverride = (toggle: boolean) => {
-    window.fetch = toggle ? fetchOverride : f;
-    console.log(`[SBL]: Fetch override is now ${toggle ? "enabled" : "disabled"}`);
-    console.log(`[SBL]: Lyrics Data Bank has ${LyricsDataBank.length} entries`);
-    console.log(LyricsDataBank);
+    window.fetch = toggle ? fetchOverride : fetchFunction;
+    log(`Fetch override is now ${toggle ? "enabled" : "disabled"}`);
+    log(`Lyrics Data Bank had ${LyricsDataBank.length} entries`, LyricsDataBank);
+
+    if (toggle) {
+        loadLyricsFromCache();
+
+        RequestCount = 0;
+        CurrentRequestId = 0;
+
+        log(`Request count: ${RequestCount}`);
+        log(`Current request ID: ${CurrentRequestId}`);
+    } else {
+        LyricsDataBank.length = 0;
+
+        log(`Request count: ${RequestCount}`);
+        log(`Current request ID: ${CurrentRequestId}`);
+
+        RequestCount = Number.MAX_SAFE_INTEGER - 1000;
+        CurrentRequestId = Number.MAX_SAFE_INTEGER - 1000;
+    }
+
+    log(`Lyrics Data Bank has now ${LyricsDataBank.length} entries`, LyricsDataBank);
 };
 
-export { toggleFetchOverride };
+export { toggleFetchOverride, clearLyricsCache };
