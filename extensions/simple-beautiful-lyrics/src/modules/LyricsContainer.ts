@@ -120,8 +120,8 @@ const ManageLyricsContainer = (container: HTMLDivElement) => {
 };
 
 let ActiveLyricsContainer: HTMLDivElement | null = null;
-const CheckForLyricsContainers = () => {
-    const fullScreenContainer = Spotify.getComponent<HTMLDivElement>("FullScreenLyricsContainerClass");
+const CheckForLyricsContainers = (mainLyricsContainer: HTMLDivElement | null) => {
+    const fullScreenContainer = mainLyricsContainer ? Spotify.getComponent<HTMLDivElement>("FullScreenLyricsContainerClass", mainLyricsContainer) : null;
 
     if (ActiveLyricsContainer === fullScreenContainer) {
         return;
@@ -138,9 +138,9 @@ const CheckForLyricsContainers = () => {
     }
 };
 
-export const Start = () => {
+export const Start = (mainLyricsContainer: HTMLDivElement | null) => {
     GlobalCleanup.AddTask(Player.SongChanged.Connect(() => (ActiveLyricsContainer = null)));
-    CheckForLyricsContainers();
+    CheckForLyricsContainers(mainLyricsContainer);
 };
 
 export { CheckForLyricsContainers };

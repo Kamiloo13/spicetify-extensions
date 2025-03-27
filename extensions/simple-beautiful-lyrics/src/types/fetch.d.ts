@@ -80,7 +80,7 @@ export interface LyricCached {
             lines: LyricsSynched[];
             previewLines: LyricsSynched[];
             provider: string;
-            providerLyricsDisplayName: string;
+            providerDisplayName: string;
             providerLyricsId: string;
             syncLyricsUri: string;
             syncType: "LINE_SYNCED" | "UNSYNCED";

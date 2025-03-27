@@ -15,6 +15,9 @@ class Spotify {
         // Sidebar Lyrics Background
         SidebarLyricsBackgroundClass: ["main-nowPlayingView-lyricsGradient", "main-nowPlayingView-lyricsGradient", "main-nowPlayingView-lyricsGradient"],
 
+        // Main Lyrics Container
+        MainLyricsContainerClass: ["lyrics-lyrics-container", "tr8V5eHsUaIkOYVw7eSG", "FUYNhisXTCmbzt9IDxnT"],
+
         // Lyrics
         LyricClass: ["lyrics-lyricsContent-lyric", "nw6rbs8R08fpPn7RWW2w", "NiCdLCpp3o2z6nBrayOn"],
         UnsyncedLyricClass: ["lyrics-lyricsContent-unsynced", "SruqsAzX8rUtY2isUZDF", "HxblHEsl2WX2yhubfVIc"],
@@ -36,12 +39,12 @@ class Spotify {
     }
 
     // Function to get a component by class name
-    static getComponent<T extends HTMLElement>(className: keyof typeof Spotify.ComponentClasses): T | null {
+    static getComponent<T extends HTMLElement>(className: keyof typeof Spotify.ComponentClasses, body: HTMLElement = document.body): T | null {
         if (Spotify.SetIndex === -1) {
             Spotify.findSetIndex(className);
         }
 
-        return document.body.querySelector<T>(`.${Spotify.ComponentClasses[className][Spotify.SetIndex]}`);
+        return body.querySelector<T>(`.${Spotify.ComponentClasses[className][Spotify.SetIndex]}`);
     }
 
     // Function to check if the arrays match at any point

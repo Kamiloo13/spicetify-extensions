@@ -117,8 +117,8 @@ const ManageLyricsBackgroundSidebar = (container: HTMLDivElement) => {
 
 let ExistingContainerMain: HTMLDivElement | null = null;
 let ExistingContainerSidebar: HTMLDivElement | null = null;
-const CheckForLiveBackgroundsMain = () => {
-    const fullScreenContainer = Spotify.getComponent<HTMLDivElement>("FullScreenLyricsBackgroundClass");
+const CheckForLiveBackgroundsMain = (mainLyricsContainer: HTMLDivElement | null) => {
+    const fullScreenContainer = mainLyricsContainer ? Spotify.getComponent<HTMLDivElement>("FullScreenLyricsBackgroundClass", mainLyricsContainer) : null;
 
     if (ExistingContainerMain === fullScreenContainer) {
         return;
@@ -136,8 +136,8 @@ const CheckForLiveBackgroundsMain = () => {
     }
 };
 
-const CheckForLiveBackgroundsSidebar = () => {
-    const sidebarContainer = Spotify.getComponent<HTMLDivElement>("SidebarLyricsBackgroundClass");
+const CheckForLiveBackgroundsSidebar = (mainLyricsContainer: HTMLDivElement | null) => {
+    const sidebarContainer = mainLyricsContainer ? Spotify.getComponent<HTMLDivElement>("SidebarLyricsBackgroundClass", mainLyricsContainer) : null;
 
     if (ExistingContainerSidebar === sidebarContainer) {
         return;
@@ -152,9 +152,9 @@ const CheckForLiveBackgroundsSidebar = () => {
     }
 };
 
-const CheckForLiveBackgrounds = () => {
-    CheckForLiveBackgroundsMain();
-    CheckForLiveBackgroundsSidebar();
+const CheckForLiveBackgrounds = (mainLyricsContainer: HTMLDivElement | null) => {
+    CheckForLiveBackgroundsMain(mainLyricsContainer);
+    CheckForLiveBackgroundsSidebar(mainLyricsContainer);
 };
 
 export { CheckForLiveBackgrounds };

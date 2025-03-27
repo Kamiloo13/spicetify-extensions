@@ -1,7 +1,11 @@
 import { LyricCached, LyricsResponse, SpMetadataFetch } from "../types/fetch";
 import { log } from "./Logger";
 
-const fetchFunction = window.fetch;
+export const fetchFunction = window.fetch;
+
+let apiEndpoint: string;
+export const getAPIEndpoint = () => apiEndpoint;
+export const setAPIEndpoint = (endpoint: string) => (apiEndpoint = endpoint);
 
 const MAX_CACHE_SIZE = 100;
 const KEY = "simple-beautiful-lyrics:cache-lyrics";
@@ -156,7 +160,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
             }
 
             const apiResponse = await fetchFunction(
-                `https://lyrics.kamiloo13.me/api/get?artist=${data.artist[0].name}&track=${data.name}&duration=${Math.round(data.duration / 1000)}&album=${data.album.name}`
+                `${getAPIEndpoint()}/get?artist=${data.artist[0].name}&track=${data.name}&duration=${Math.round(data.duration / 1000)}&album=${data.album.name}`
             ).catch(() => null);
 
             const apiLyrics = (await apiResponse?.json().catch(() => null)) as LyricsResponse | null;
@@ -177,9 +181,9 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
 
             const lyricsData: LyricCached["data"] = {
                 colors: {
-                    background: 0,
-                    highlightText: 0,
-                    text: 0
+                    background: -10848593,
+                    highlightText: -1,
+                    text: -16777216
                 },
                 hasVocalRemoval: false,
                 lyrics: {
@@ -192,7 +196,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                     lines: apiLyrics.lines,
                     previewLines: apiLyrics.lines.slice(0, 5),
                     provider: apiLyrics.provider,
-                    providerLyricsDisplayName: apiLyrics.providerLyricsDisplayName,
+                    providerDisplayName: apiLyrics.providerLyricsDisplayName + " (Lyrics.kamiloo13.me)",
                     providerLyricsId: apiLyrics.providerLyricsId,
                     syncLyricsUri: "",
                     syncType: apiLyrics.isSynced ? "LINE_SYNCED" : "UNSYNCED"
