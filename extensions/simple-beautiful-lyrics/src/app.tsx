@@ -11,6 +11,7 @@ import { setLogEnabled } from "./services/Logger";
 import Spotify from "./services/Spotify";
 
 const DEFAULT_API_ENDPOINT = "https://lyrics.kamiloo13.me/api";
+const URL_REGEX = /^https?:\/\/([\w-]+(\.[\w-]+)+|localhost)(:[0-9]{1,5})?(\/[^\s\?]*)?$/;
 
 async function main() {
     // Comment this out in development mode
@@ -19,7 +20,7 @@ async function main() {
     const settings = new SettingsSection("Simple Beautiful Lyrics", "simple-beautiful-lyrics");
 
     const endpoint = settings.getFieldValue("api-endpoint") as string;
-    if (/^(http|https):\/\/[^ "]+$/.test(endpoint)) {
+    if (URL_REGEX.test(endpoint)) {
         settings.setFieldValue("api-input-endpoint", endpoint);
         setAPIEndpoint(endpoint);
     } else {
@@ -33,21 +34,27 @@ async function main() {
         const fetchOverrideToggle = Boolean(settings.getFieldValue("override-fetch"));
         toggleFetchOverride(fetchOverrideToggle);
     });
-    settings.addInput("api-input-endpoint", `API Endpoint (default: ${DEFAULT_API_ENDPOINT})`, DEFAULT_API_ENDPOINT);
-    settings.addButton("api-submit", "Save API Endpoint", "Save Setting", () => {
-        let endpoint = settings.getFieldValue("api-input-endpoint") as string;
-        const regex = /^(http|https):\/\/[^ "]+$/;
+    settings.addInput("api-input-endpoint", `API Endpoint (default: ${DEFAULT_API_ENDPOINT})`, DEFAULT_API_ENDPOINT, () => {}, "text", {
+        onBlur: (e) => {
+            const endpoint = e.target.value;
 
-        if (!regex.test(endpoint)) {
-            endpoint = DEFAULT_API_ENDPOINT;
-            settings.setFieldValue("api-input-endpoint", endpoint);
-            Spicetify.showNotification("Invalid API Endpoint. Default value restored.");
-            return;
+            if (endpoint.length > 4 && endpoint === settings.getFieldValue("api-endpoint")) return;
+
+            if (!URL_REGEX.test(endpoint)) {
+                e.target.value = DEFAULT_API_ENDPOINT;
+
+                settings.setFieldValue("api-endpoint", DEFAULT_API_ENDPOINT);
+                settings.setFieldValue("api-input-endpoint", endpoint);
+
+                setAPIEndpoint(DEFAULT_API_ENDPOINT);
+                Spicetify.showNotification("Invalid API Endpoint. Default value restored.");
+                return;
+            }
+
+            setAPIEndpoint(endpoint);
+            settings.setFieldValue("api-endpoint", endpoint);
+            Spicetify.showNotification("API Endpoint saved!");
         }
-
-        setAPIEndpoint(endpoint);
-        settings.setFieldValue("api-endpoint", endpoint);
-        Spicetify.showNotification("API Endpoint saved!");
     });
     settings.addToggle("enable-debug", "Enable debug logging", false, () => {
         setLogEnabled(Boolean(settings.getFieldValue("enable-debug")));
