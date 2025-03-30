@@ -3,16 +3,16 @@ import { log } from "./Logger";
 
 export const fetchFunction = window.fetch;
 
-let apiEndpoint: string;
-export const getAPIEndpoint = () => apiEndpoint;
-export const setAPIEndpoint = (endpoint: string) => (apiEndpoint = endpoint);
-
 const MAX_CACHE_SIZE = 100;
 const KEY = "simple-beautiful-lyrics:cache-lyrics";
 const LyricsDataBank: LyricCached[] = [];
 
 let RequestCount = 0;
 let CurrentRequestId = 0;
+
+export const getFieldValue = (nameId: string) => {
+    return JSON.parse(Spicetify.LocalStorage.get(`simple-beautiful-lyrics.${nameId}`) || "{}")?.value;
+};
 
 const checkOverflow = () => {
     if (RequestCount > Number.MAX_SAFE_INTEGER - 1001) {
@@ -159,8 +159,22 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                 return response;
             }
 
+            const token = getFieldValue("api-token");
+
+            // Spotify username is used in here ONLY for the Ratelimitter to work properly (API key is not required but it disables the rate limiter)
+            // If you want to use the API key, you can set it in the settings
             const apiResponse = await fetchFunction(
-                `${getAPIEndpoint()}/get?artist=${data.artist[0].name}&track=${data.name}&duration=${Math.round(data.duration / 1000)}&album=${data.album.name}`
+                `${getFieldValue("api-endpoint") ?? "https://lyrics.kamiloo13.me"}/get?artist=${data.artist[0].name}&track=${data.name}&duration=${Math.round(
+                    data.duration / 1000
+                )}&album=${data.album.name}&username=${Spicetify.Platform.username}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Referer: "https://xpui.app.spotify.com",
+                        Authorization: token ? `Bearer ${token}` : ""
+                    }
+                }
             ).catch(() => null);
 
             const apiLyrics = (await apiResponse?.json().catch(() => null)) as LyricsResponse | null;
@@ -196,7 +210,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                     lines: apiLyrics.lines,
                     previewLines: apiLyrics.lines.slice(0, 5),
                     provider: apiLyrics.provider,
-                    providerDisplayName: apiLyrics.providerLyricsDisplayName + " (Lyrics.kamiloo13.me)",
+                    providerDisplayName: apiLyrics.providerLyricsDisplayName + " (simple-beautiful-lyrics)",
                     providerLyricsId: apiLyrics.providerLyricsId,
                     syncLyricsUri: "",
                     syncType: apiLyrics.isSynced ? "LINE_SYNCED" : "UNSYNCED"

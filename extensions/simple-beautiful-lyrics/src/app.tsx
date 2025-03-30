@@ -6,7 +6,7 @@ import { Start as StartCheckLyrics, CheckForLyricsContainers } from "./modules/L
 import { CheckForLiveBackgrounds } from "./modules/LyricsBackground";
 import { SettingsSection } from "./modules/SettingsSection";
 import Player from "./services/Player";
-import { toggleFetchOverride, clearLyricsCache, setAPIEndpoint } from "./services/FetchOv";
+import { toggleFetchOverride, clearLyricsCache } from "./services/FetchOv";
 import { setLogEnabled } from "./services/Logger";
 import Spotify from "./services/Spotify";
 
@@ -22,9 +22,7 @@ async function main() {
     const endpoint = settings.getFieldValue("api-endpoint") as string;
     if (URL_REGEX.test(endpoint)) {
         settings.setFieldValue("api-input-endpoint", endpoint);
-        setAPIEndpoint(endpoint);
     } else {
-        setAPIEndpoint(DEFAULT_API_ENDPOINT);
         settings.setFieldValue("api-endpoint", DEFAULT_API_ENDPOINT);
         settings.setFieldValue("api-input-endpoint", DEFAULT_API_ENDPOINT);
     }
@@ -46,14 +44,21 @@ async function main() {
                 settings.setFieldValue("api-endpoint", DEFAULT_API_ENDPOINT);
                 settings.setFieldValue("api-input-endpoint", endpoint);
 
-                setAPIEndpoint(DEFAULT_API_ENDPOINT);
                 Spicetify.showNotification("Invalid API Endpoint. Default value restored.");
                 return;
             }
 
-            setAPIEndpoint(endpoint);
             settings.setFieldValue("api-endpoint", endpoint);
             Spicetify.showNotification("API Endpoint saved!");
+        }
+    });
+    settings.addHidden("api-token", "");
+    settings.addInput("api-token-input", "API Token (optional)", "", () => {}, "text", {
+        onBlur: (e) => {
+            const token = e.target.value;
+            if (token === settings.getFieldValue("api-token")) return;
+            settings.setFieldValue("api-token", token);
+            Spicetify.showNotification("API Token saved!");
         }
     });
     settings.addToggle("enable-debug", "Enable debug logging", false, () => {
