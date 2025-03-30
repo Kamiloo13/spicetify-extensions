@@ -159,14 +159,23 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                 return response;
             }
 
-            const token = getFieldValue("api-token") ? "&token=" + getFieldValue("api-token") : "";
+            const token = getFieldValue("api-token");
 
             // Spotify username is used in here ONLY for the Ratelimitter to work properly (API key is not required but it disables the rate limiter)
             // If you want to use the API key, you can set it in the settings
             const apiResponse = await fetchFunction(
                 `${getFieldValue("api-endpoint") ?? "https://lyrics.kamiloo13.me"}/get?artist=${data.artist[0].name}&track=${data.name}&duration=${Math.round(
                     data.duration / 1000
-                )}&album=${data.album.name}&username=${Spicetify.Platform.username}${token}`
+                )}&album=${data.album.name}&username=${Spicetify.Platform.username}`,
+                token
+                    ? {
+                          method: "GET",
+                          headers: {
+                              "Content-Type": "application/json",
+                              Authorization: `Bearer ${token}`
+                          }
+                      }
+                    : undefined
             ).catch(() => null);
 
             const apiLyrics = (await apiResponse?.json().catch(() => null)) as LyricsResponse | null;
