@@ -2,9 +2,10 @@ import Cleanup from "./Cleanup";
 
 const GlobalCleanup = new Cleanup();
 
+// Comment this out in case of building the "local" version
 // Store our current-script/style and handle other-scripts not existing
-let Script: HTMLScriptElement;
-let HasDevInstance = false;
+export let Script: HTMLScriptElement;
+export let HasDevInstance = false;
 {
     let productionScript: HTMLScriptElement | undefined;
     let developmentScript: HTMLScriptElement | undefined;
@@ -100,4 +101,4 @@ export const ShowNotification = (html: string, variant: "info" | "success" | "wa
 };
 
 export const IsSpicetifyLoaded = () => AllSpicetifyLoaded || WaitForSpicetify();
-export { GlobalCleanup, SpotifyPlayer, SpotifyHistory, SpotifyPlaybar, HistoryLocation, Script, HasDevInstance };
+export { GlobalCleanup, SpotifyPlayer, SpotifyHistory, SpotifyPlaybar, HistoryLocation };

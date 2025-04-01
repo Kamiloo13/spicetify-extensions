@@ -1,5 +1,7 @@
 // Initial Services
-import { GlobalCleanup, HasDevInstance, IsSpicetifyLoaded } from "./services/Session";
+// Comment this out in case of building the "local" version
+import { HasDevInstance } from "./services/Session";
+import { GlobalCleanup, IsSpicetifyLoaded } from "./services/Session";
 import { Start as StartCoverArt } from "./services/CoverArt";
 import { Start as StartCheckLyrics, CheckForLyricsContainers } from "./modules/LyricsContainer";
 // import { Start as StartCheckContribute, CheckForContributeContainer } from "./modules/LyricsContribute";
@@ -14,7 +16,7 @@ const DEFAULT_API_ENDPOINT = "https://lyrics.kamiloo13.me/api";
 const URL_REGEX = /^https?:\/\/([\w-]+(\.[\w-]+)+|localhost)(:[0-9]{1,5})?(\/[^\s\?]*)?$/;
 
 async function main() {
-    // Comment this out in development mode
+    // Comment this out in development mode or when using the local version
     if (HasDevInstance) return;
 
     const settings = new SettingsSection("Simple Beautiful Lyrics", "simple-beautiful-lyrics");

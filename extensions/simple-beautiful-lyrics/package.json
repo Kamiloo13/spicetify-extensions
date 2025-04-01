@@ -5,6 +5,7 @@
     "scripts": {
         "build": "spicetify-creator",
         "build-local": "spicetify-creator --out=dist --minify",
+        "build-local-no-disable": "spicetify-creator --out=local --minify",
         "watch": "spicetify-creator --watch",
         "start": "spicetify config extensions simple-beautiful-lyrics.js & spicetify apply enable-devtools",
         "disable": "spicetify config extensions simple-beautiful-lyrics.js- & spicetify apply",
