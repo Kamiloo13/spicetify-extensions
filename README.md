@@ -1,5 +1,7 @@
 # Spicetify Extensions
 
+[![](https://data.jsdelivr.com/v1/package/gh/kamiloo13/spicetify-extensions/badge?style=rounded)](https://www.jsdelivr.com/package/gh/kamiloo13/spicetify-extensions)
+
 Extensions made for [Spicetify CLI](https://github.com/spicetify/spicetify-cli).
 
 - [Simple Beautiful Lyrics](extensions/simple-beautiful-lyrics) - offers a dynamic background for lyrics that changes based on the album cover of the current song [[Original Extension Repo](https://github.com/surfbryce/beautiful-lyrics)].
