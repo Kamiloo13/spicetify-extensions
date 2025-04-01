@@ -24,6 +24,22 @@ Enhance your full-screen song lyrics experience with this simple theme for Spoti
 | ⚙️Toggle | Enables Debbuging                                                                      | ❌ Off                            |
 | 📩Button | Clear cache                                                                            | -                                 |
 
+### Installation (Local)
+1. Run `spicetify config-dir` via command prompt.
+1. Download `simple-beautiful-lyrics.js` from [extensions/simple-beautiful-lyrics/local/simple-beautiful-lyrics.js](https://github.com/Kamiloo13/spicetify-extensions/blob/main/extensions/simple-beautiful-lyrics/local/simple-beautiful-lyrics.js) and place it in `/Extensions`.
+1. Run `spicetify config extensions simple-beautiful-lyrics.js & spicetify apply`
+
+⚠ **Warning:** This version won't auto-update and may break in the future. If you want to use a simple auto-updater, save the following code snippet as, for example, `simple-beautiful-lyrics-updater.js` and follow the installation steps above **(skip 2 step)**, but with the modified name.
+
+```js
+(() => {
+    const themeScript = document.createElement("script");
+    themeScript.defer = true;
+    themeScript.src = "https://cdn.jsdelivr.net/gh/Kamiloo13/spicetify-extensions@latest/extensions/simple-beautiful-lyrics/local/simple-beautiful-lyrics.js";
+    document.body.appendChild(themeScript);
+})();
+```
+
 ### Contributing
 
 Found a bug or have an idea? Feel free to submit an issue or a pull request!
