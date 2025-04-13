@@ -14,6 +14,7 @@ import Spotify from "./services/Spotify";
 
 const DEFAULT_API_ENDPOINT = "https://lyrics.kamiloo13.me/api";
 const URL_REGEX = /^https?:\/\/([\w-]+(\.[\w-]+)+|localhost)(:[0-9]{1,5})?(\/[^\s\?]*)?$/;
+const CacheVersion = "1";
 
 async function main() {
     // Comment this out in development mode or when using the local version
@@ -71,6 +72,13 @@ async function main() {
         Spicetify.showNotification("Lyrics cache cleared!");
     });
     settings.pushSettings();
+
+    // Check if cache version is up to date
+    const cacheVersion = settings.getFieldValue("cache-version");
+    if (cacheVersion !== CacheVersion) {
+        settings.setFieldValue("cache-version", CacheVersion);
+        clearLyricsCache();
+    }
 
     // Read settings
     setLogEnabled(Boolean(settings.getFieldValue("enable-debug")));

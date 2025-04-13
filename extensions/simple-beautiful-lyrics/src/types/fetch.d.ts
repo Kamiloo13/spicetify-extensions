@@ -62,7 +62,11 @@ export interface LyricsResponse {
 
 export interface LyricCached {
     gid: string;
-    canonical_id: string;
+    canonical_ids: string[];
+    metadata?: {
+        artist_name: string;
+        title: string;
+    };
     data?: {
         colors: {
             background: number;
@@ -75,7 +79,6 @@ export interface LyricCached {
             capStatus: string;
             isDenseTypeface: boolean;
             isRtlLanguage: boolean;
-            isSnippet: boolean;
             language: string;
             lines: LyricsSynched[];
             previewLines: LyricsSynched[];
@@ -86,4 +89,47 @@ export interface LyricCached {
             syncType: "LINE_SYNCED" | "UNSYNCED";
         };
     };
+}
+
+export interface NowPlaylingSpotifyMetadata {
+    metadata: {
+        "actions.skipping_next_past_track": string;
+        "actions.skipping_prev_past_track": string;
+        added_at: string;
+        album_artist_name: string;
+        album_title: string;
+        album_uri: string;
+        artist_name: string;
+        artist_uri: string;
+        "canvas.artist.avatar": string;
+        "canvas.artist.name": string;
+        "canvas.artist.uri": string;
+        "canvas.canvasUri": string;
+        "canvas.entityUri": string;
+        "canvas.explicit": string;
+        "canvas.fileId": string;
+        "canvas.id": string;
+        "canvas.type": string;
+        "canvas.uploadedBy": string;
+        "canvas.url": string;
+        "collection.can_add": string;
+        "collection.can_ban": string;
+        "collection.in_collection": string;
+        "collection.is_banned": string;
+        context_uri: string;
+        duration: string;
+        entity_uri: string;
+        has_lyrics: string;
+        image_large_url: string;
+        image_small_url: string;
+        image_url: string;
+        image_xlarge_url: string;
+        iteration: string;
+        marked_for_download: string;
+        "media.start_position": string;
+        title: string;
+        track_player: string;
+    };
+    uid: string;
+    uri: string;
 }

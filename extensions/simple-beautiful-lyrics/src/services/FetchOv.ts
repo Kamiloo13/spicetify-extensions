@@ -1,4 +1,4 @@
-import { LyricCached, LyricsResponse, SpMetadataFetch } from "../types/fetch";
+import { LyricCached, LyricsResponse, NowPlaylingSpotifyMetadata, SpMetadataFetch } from "../types/fetch";
 import { log } from "./Logger";
 
 export const fetchFunction = window.fetch;
@@ -38,7 +38,7 @@ const saveLyricsToCache = () => {
 };
 
 const addToCache = (data: LyricCached) => {
-    if (!LyricsDataBank.find((x) => x.canonical_id === data.canonical_id)) {
+    if (!LyricsDataBank.some((x) => x.gid === data.gid)) {
         if (LyricsDataBank.length >= MAX_CACHE_SIZE) {
             LyricsDataBank.shift();
             log("Lyrics Data Bank overflowed, removing oldest entry");
@@ -46,7 +46,7 @@ const addToCache = (data: LyricCached) => {
 
         LyricsDataBank.push(data);
         saveLyricsToCache();
-    } else log(`Lyrics already exist in 'bank' <${data.canonical_id}>`);
+    } else log(`Lyrics already exist in 'bank' <${data.gid}>`);
 };
 
 const clearLyricsCache = () => {
@@ -89,21 +89,64 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                 return fetchFunction(...args);
             }
 
-            const lyrics = LyricsDataBank.find((x) => x.canonical_id === canonicalId);
+            const lyrics = LyricsDataBank.find((x) => x.canonical_ids.includes(canonicalId));
+
+            if (lyrics) {
+                CurrentRequestId++;
+                if (lyrics.data) {
+                    log(`Lyrics found in 'bank' <${canonicalId}>`);
+                    return new Response(JSON.stringify(lyrics.data), {
+                        status: 200,
+                        statusText: "OK",
+                        headers: new Headers({
+                            "Content-Type": "application/json"
+                        })
+                    });
+                }
+                log(`Lyrics were found in spotify as available <${canonicalId}>`);
+                return fetchFunction(...args);
+            }
             CurrentRequestId++;
 
-            if (lyrics && lyrics.data) {
-                log(`Lyrics found in 'bank' <${canonicalId}>`);
-                return new Response(JSON.stringify(lyrics.data), {
-                    status: 200,
-                    statusText: "OK",
-                    headers: new Headers({
-                        "Content-Type": "application/json"
-                    })
-                });
+            const nowPlaying = Spicetify.Queue.track?.contextTrack as NowPlaylingSpotifyMetadata;
+            const nowPlayingId = nowPlaying?.uri?.split(":").at(-1);
+            const nextPlaying = Spicetify.Queue.nextTracks?.[0]?.contextTrack as NowPlaylingSpotifyMetadata;
+            const nextPlayingId = nextPlaying?.uri?.split(":").at(-1);
+            const lastRecords = LyricsDataBank.slice(-5).filter((x) => x.metadata);
+
+            if (nowPlayingId === canonicalId) {
+                const foundRecord = lastRecords.find((x) => x.metadata?.artist_name === nowPlaying.metadata.artist_name && x.metadata?.title === nowPlaying.metadata.title);
+                if (foundRecord) {
+                    foundRecord.canonical_ids.push(canonicalId);
+                    saveLyricsToCache();
+
+                    log(`Lyrics found in 'bank' after parse <${canonicalId}>`);
+                    return new Response(JSON.stringify(foundRecord.data), {
+                        status: 200,
+                        statusText: "OK",
+                        headers: new Headers({
+                            "Content-Type": "application/json"
+                        })
+                    });
+                }
+            } else if (nextPlayingId === canonicalId) {
+                const foundRecord = lastRecords.find((x) => x.metadata?.artist_name === nextPlaying.metadata.artist_name && x.metadata?.title === nextPlaying.metadata.title);
+                if (foundRecord) {
+                    foundRecord.canonical_ids.push(canonicalId);
+                    saveLyricsToCache();
+
+                    log(`Lyrics found in 'bank' after parse <${canonicalId}>`);
+                    return new Response(JSON.stringify(foundRecord.data), {
+                        status: 200,
+                        statusText: "OK",
+                        headers: new Headers({
+                            "Content-Type": "application/json"
+                        })
+                    });
+                }
             }
 
-            log(`Lyrics not found in 'bank' <${canonicalId}>`);
+            log(`Lyrics not found in 'bank' after parse <${canonicalId}>`);
             return fetchFunction(...args);
         } else if (url.startsWith("https://spclient.wg.spotify.com/metadata/4/track/")) {
             const gId = url.split("/").at(6)?.split("?").at(0)!;
@@ -140,19 +183,28 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                     });
                 }
 
-                log(`Lyrics found in 'bank' but no lyrics were available when fetching for 'metadata' <${gId}>`);
+                log(`Lyrics found in 'bank' but no data when fetching for 'metadata' <${gId}>`);
                 return fetchFunction(...args);
             }
 
-            const response = await fetchFunction(...args);
-            const data = (await response.clone().json()) as SpMetadataFetch;
+            let response: Response;
+            let data: SpMetadataFetch;
+            try {
+                response = await fetchFunction(...args);
+                data = await response.clone().json();
+            } catch (e) {
+                console.error("[SBL]: Error while fetching metadata", e);
+                CurrentRequestId++;
+                return fetchFunction(...args);
+            }
+
             const canonicalId = data.canonical_uri.split(":").at(-1)!;
 
             if (data.has_lyrics) {
                 log(`Lyrics found in 'metadata' <${gId}>`);
                 addToCache({
                     gid: gId,
-                    canonical_id: canonicalId
+                    canonical_ids: [canonicalId]
                 });
                 CurrentRequestId++;
 
@@ -186,7 +238,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
 
                 addToCache({
                     gid: gId,
-                    canonical_id: canonicalId
+                    canonical_ids: [canonicalId]
                 });
 
                 return response;
@@ -206,7 +258,6 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                     capStatus: "NONE",
                     isDenseTypeface: false,
                     isRtlLanguage: false,
-                    isSnippet: false,
                     language: data.language_of_performance[0],
                     lines: apiLyrics.lines,
                     previewLines: apiLyrics.lines.slice(0, 5),
@@ -220,8 +271,12 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
 
             addToCache({
                 gid: gId,
-                canonical_id: canonicalId,
-                data: lyricsData
+                canonical_ids: [canonicalId],
+                data: lyricsData,
+                metadata: {
+                    artist_name: data.artist[0].name,
+                    title: data.name
+                }
             });
 
             data.has_lyrics = true;
