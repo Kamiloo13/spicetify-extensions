@@ -21,10 +21,12 @@ Enhance your full-screen song lyrics experience with this simple theme for Spoti
 | -------- | -------------------------------------------------------------------------------------- | --------------------------------- |
 | ⚙️Toggle | Overrides Spotify's `fetch` function to enable searching for alternative lyric sources | ✅ On                             |
 | 📝Text   | API Endpoint                                                                           | `https://lyrics.kamiloo13.me/api` |
+| 📝Text   | Custom API Token allows to bypass ratelimitter                                         | (empty)                           |
 | ⚙️Toggle | Enables Debbuging                                                                      | ❌ Off                            |
-| 📩Button | Clear cache                                                                            | -                                 |
+| 📩Button | Clear local cache                                                                      | -                                 |
 
 ### Installation (Local)
+
 1. Run `spicetify config-dir` via command prompt.
 1. Download `simple-beautiful-lyrics.js` from [extensions/simple-beautiful-lyrics/local/simple-beautiful-lyrics.js](https://github.com/Kamiloo13/spicetify-extensions/blob/main/extensions/simple-beautiful-lyrics/local/simple-beautiful-lyrics.js) and place it in `/Extensions`.
 1. Run `spicetify config extensions simple-beautiful-lyrics.js & spicetify apply`
