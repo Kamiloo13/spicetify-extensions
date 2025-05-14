@@ -19,41 +19,60 @@ class Spotify {
         MainLyricsContainerClass: ["lyrics-lyrics-container", "tr8V5eHsUaIkOYVw7eSG", "FUYNhisXTCmbzt9IDxnT"],
 
         // Lyrics
-        LyricClass: ["lyrics-lyricsContent-lyric", "nw6rbs8R08fpPn7RWW2w", "NiCdLCpp3o2z6nBrayOn"],
+        LyricClass: ["lyrics-lyricsContent-lyric", "BJ1zQ_ReY3QPaS7SW46s", "NiCdLCpp3o2z6nBrayOn"],
         UnsyncedLyricClass: ["lyrics-lyricsContent-unsynced", "SruqsAzX8rUtY2isUZDF", "HxblHEsl2WX2yhubfVIc"],
         HighlightedLyricClass: ["lyrics-lyricsContent-highlight", "aeO5D7ulxy19q4qNBrkk", "MEjuIn9iTBQbnCqHpkoQ"],
         ActiveLyricClass: ["lyrics-lyricsContent-active", "EhKgYshvOwpSrTv399Mw", "arY01KDGhWNgzlAHlhpd"]
     };
 
-    private static SetIndex = -1;
+    private static SetIndexMap: Record<string, number> = {};
+    private static SetIndexMapTries: Record<string, number> = {};
+    private static SetIndexMapMaxTries = 1000;
+
     static findSetIndex(className: keyof typeof Spotify.ComponentClasses) {
         const classOptions = Spotify.ComponentClasses[className];
 
         for (let i = 0; i < classOptions.length; i++) {
             const element = document.body.querySelector(`.${classOptions[i]}`);
             if (element) {
-                Spotify.SetIndex = i;
+                Spotify.SetIndexMap[className] = i;
                 return;
             }
+        }
+
+        Spotify.SetIndexMapTries[className] = (Spotify.SetIndexMapTries[className] || 0) + 1;
+
+        if (Spotify.SetIndexMapTries[className] >= Spotify.SetIndexMapMaxTries) {
+            console.warn(`Failed to find class for ${className} after ${Spotify.SetIndexMapMaxTries} tries. Assuming default class.`);
+            Spotify.SetIndexMap[className] = 0;
+            return;
         }
     }
 
     // Function to get a component by class name
     static getComponent<T extends HTMLElement>(className: keyof typeof Spotify.ComponentClasses, body: HTMLElement = document.body): T | null {
-        if (Spotify.SetIndex === -1) {
+        if (Spotify.SetIndexMap[className] === undefined) {
             Spotify.findSetIndex(className);
         }
 
-        return body.querySelector<T>(`.${Spotify.ComponentClasses[className][Spotify.SetIndex]}`);
+        if (Spotify.SetIndexMap[className] === undefined) {
+            return null;
+        }
+
+        return body.querySelector<T>(`.${Spotify.ComponentClasses[className][Spotify.SetIndexMap[className]]}`);
     }
 
     // Function to check if the arrays match at any point
     static checkClassNamesMatch(classNames: DOMTokenList, componentKey: keyof typeof Spotify.ComponentClasses): boolean {
-        if (Spotify.SetIndex === -1) {
+        if (Spotify.SetIndexMap[componentKey] === undefined) {
             Spotify.findSetIndex(componentKey);
         }
 
-        const componentClassName = Spotify.ComponentClasses[componentKey][Spotify.SetIndex];
+        if (Spotify.SetIndexMap[componentKey] === undefined) {
+            return false;
+        }
+
+        const componentClassName = Spotify.ComponentClasses[componentKey][Spotify.SetIndexMap[componentKey]];
         return classNames.contains(componentClassName);
     }
 }

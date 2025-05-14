@@ -1,10 +1,11 @@
 $active-lyric-classes: ("lyrics-lyricsContent-active", "EhKgYshvOwpSrTv399Mw", "arY01KDGhWNgzlAHlhpd");
-$lyric-classes: ("lyrics-lyricsContent-lyric", "nw6rbs8R08fpPn7RWW2w", "NiCdLCpp3o2z6nBrayOn");
+$lyric-classes: ("lyrics-lyricsContent-lyric", "BJ1zQ_ReY3QPaS7SW46s", "NiCdLCpp3o2z6nBrayOn");
 
 // We need to override the hover effect since we changed the way the text is filled-in
 @each $class in $lyric-classes {
     .#{$class}:hover {
         text-shadow: 0 0 0px var(--lyrics-color-active) !important;
+        text-decoration: none !important;
     }
 
     /*
@@ -22,14 +23,16 @@ $lyric-classes: ("lyrics-lyricsContent-lyric", "nw6rbs8R08fpPn7RWW2w", "NiCdLCpp
 
     .#{$class} {
         --lyrics-color-inactive: rgb(240 240 240 / 51%) !important;
+        font-weight: 700;
+        margin-bottom: 0.5em !important;
     }
 }
 
 // When the active text grows in size we want more space between it and the surrounding lines
 @each $class in $active-lyric-classes {
     .#{$class} {
-        margin-top: 0.25em;
-        margin-bottom: 0.25em;
+        margin-top: 0.25em !important;
+        margin-bottom: 0.25em !important;
     }
 }
 
