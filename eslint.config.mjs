@@ -2,7 +2,7 @@ import tseslint from "typescript-eslint";
 
 let mergedRules = {};
 
-tseslint.configs.stylistic.forEach((ruleset) => {
+tseslint.configs.recommended.forEach((ruleset) => {
     if (ruleset.rules !== undefined) {
         Object.assign(mergedRules, ruleset.rules);
     }

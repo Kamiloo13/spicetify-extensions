@@ -149,7 +149,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
             log(`Lyrics not found in 'bank' after parse <${canonicalId}>`);
             return fetchFunction(...args);
         } else if (url.startsWith("https://spclient.wg.spotify.com/metadata/4/track/")) {
-            const gId = url.split("/").at(6)?.split("?").at(0)!;
+            const gId = url.split("/").at(6)?.split("?").at(0);
 
             if (!gId) {
                 console.error("[SBL]: GID not found in 'metadata' fetch");
