@@ -117,6 +117,7 @@ const ManageLyricsBackgroundSidebar = (container: HTMLDivElement) => {
 
 let ExistingContainerMain: HTMLDivElement | null = null;
 let ExistingContainerSidebar: HTMLDivElement | null = null;
+let prevMain: HTMLDivElement | null = null;
 const CheckForLiveBackgroundsMain = (mainLyricsContainer: HTMLDivElement | null) => {
     const fullScreenContainer = mainLyricsContainer ? Spotify.getComponent<HTMLDivElement>("FullScreenLyricsBackgroundClass", mainLyricsContainer) : null;
 
@@ -130,9 +131,31 @@ const CheckForLiveBackgroundsMain = (mainLyricsContainer: HTMLDivElement | null)
     } else {
         ExistingContainerMain = fullScreenContainer;
         fullScreenContainer.style.background = "linear-gradient(90deg, #0a0a0a8a, #0000)";
-        ManageLyricsBackground(
-            fullScreenContainer?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.querySelector(".under-main-view") as HTMLDivElement
-        );
+
+        const normalBackgroundContainer = mainLyricsContainer?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.querySelector(
+            ".before-scroll-node"
+        ) as HTMLDivElement;
+
+        if (prevMain && prevMain !== mainLyricsContainer) {
+            BackgroundMainCleanup.Clean();
+        }
+        prevMain = mainLyricsContainer;
+
+        if (normalBackgroundContainer) {
+            ManageLyricsBackground(normalBackgroundContainer);
+            return;
+        }
+
+        // Create a div element on the 5th parent element
+        const parentElement = Spotify.getComponent<HTMLDivElement>("CinemaModeContainerToInjectBackground", document.body);
+        if (parentElement) {
+            const uselessElem = Spotify.getComponent<HTMLDivElement>("CinemaModeBackgroundToRemove", parentElement);
+            if (uselessElem) uselessElem.style.background = "none";
+
+            const newDiv = BackgroundMainCleanup.AddHtml(document.createElement("div"));
+            parentElement.prepend(newDiv);
+            ManageLyricsBackground(newDiv);
+        }
     }
 };
 

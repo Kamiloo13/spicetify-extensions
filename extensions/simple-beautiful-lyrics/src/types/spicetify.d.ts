@@ -540,6 +540,7 @@ declare namespace Spicetify {
 	 * @param uri Any type of URI that has artwork (playlist, track, album, artist, show, ...)
 	 */
 	function colorExtractor(uri: string): Promise<{
+		DARK_VIBRANT: string;
 		DESATURATED: string;
 		LIGHT_VIBRANT: string;
 		PROMINENT: string;
@@ -1418,7 +1419,7 @@ declare namespace Spicetify {
 			/**
 			 * Label to display in the tooltip
 			 */
-			label: string;
+			label: string | React.ReactNode;
 			/**
 			 * The child element that the tooltip will be attached to
 			 * and will display when hovered over

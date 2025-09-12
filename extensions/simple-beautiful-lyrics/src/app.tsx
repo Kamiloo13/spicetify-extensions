@@ -93,7 +93,9 @@ async function main() {
 
     const observer = GlobalCleanup.AddObserver(
         new MutationObserver(() => {
-            const mainLyricsContainer = Spotify.getComponent<HTMLDivElement>("MainLyricsContainerClass", document.body);
+            const mainLyricsContainers = Spotify.getComponents<HTMLDivElement>("MainLyricsContainerClass", document.body);
+
+            const mainLyricsContainer = mainLyricsContainers.length == 1 ? mainLyricsContainers[0] : mainLyricsContainers.length > 1 ? mainLyricsContainers[1] : null;
             CheckForLiveBackgrounds(mainLyricsContainer);
             CheckForLyricsContainers(mainLyricsContainer);
             // CheckForContributeContainer(mainLyricsContainer);
@@ -102,13 +104,9 @@ async function main() {
 
     observer.observe(document.body, { attributes: false, childList: true, subtree: true });
 
-    // Fix the lyrics-cinema mode
-    const lyricsCinema = document.querySelector<HTMLDivElement>("#lyrics-cinema");
-    lyricsCinema?.style.setProperty("grid-area", "main-view / main-view / main-view / right-sidebar");
-    lyricsCinema?.style.setProperty("overflow", "hidden");
-
     // Check for initial elements
-    const mainLyricsContainer = Spotify.getComponent<HTMLDivElement>("MainLyricsContainerClass", document.body);
+    const mainLyricsContainers = Spotify.getComponents<HTMLDivElement>("MainLyricsContainerClass", document.body);
+    const mainLyricsContainer = mainLyricsContainers.length == 1 ? mainLyricsContainers[0] : mainLyricsContainers.length > 1 ? mainLyricsContainers[1] : null;
     CheckForLiveBackgrounds(mainLyricsContainer);
     // CheckForContributeContainer(mainLyricsContainer);
     // StartCheckContribute(mainLyricsContainer);

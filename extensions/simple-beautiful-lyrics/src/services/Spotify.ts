@@ -7,22 +7,26 @@ class Spotify {
     // Order of class names: [Spicetify, Spotify Windows 10, Spotify Windows 11]
     static ComponentClasses = {
         // Background
-        FullScreenLyricsBackgroundClass: ["lyrics-lyrics-background", "o4GE4jG5_QICak2JK_bn", "L9xhJOJnV2OL5Chm3Jew"],
+        FullScreenLyricsBackgroundClass: ["lyrics-lyrics-background", "RFThkjLuWfPUO9shrMOZ"],
 
         // Lyrics Container
-        FullScreenLyricsContainerClass: ["lyrics-lyrics-contentWrapper", "_Wna90no0o0dta47Heiw", "esRByMgBY3TiENAsbDHA"],
+        FullScreenLyricsContainerClass: ["lyrics-lyrics-contentWrapper", "t_dtt9KL1wnNRvRO_y5L"],
 
         // Sidebar Lyrics Background
-        SidebarLyricsBackgroundClass: ["main-nowPlayingView-lyricsGradient", "main-nowPlayingView-lyricsGradient", "main-nowPlayingView-lyricsGradient"],
+        SidebarLyricsBackgroundClass: ["main-nowPlayingView-lyricsGradient"],
 
         // Main Lyrics Container
-        MainLyricsContainerClass: ["lyrics-lyrics-container", "tr8V5eHsUaIkOYVw7eSG", "FUYNhisXTCmbzt9IDxnT"],
+        MainLyricsContainerClass: ["lyrics-lyrics-container", "lofIAg8Ixko3mfBrbfej"],
+
+        // Cinema Mode
+        CinemaModeBackgroundToRemove: ["x81eiLoZ5zWkSS1y28Oj"],
+        CinemaModeContainerToInjectBackground: ["x0lJCeJrx_56dJTWdATl"],
 
         // Lyrics
-        LyricClass: ["lyrics-lyricsContent-lyric", "BJ1zQ_ReY3QPaS7SW46s", "NiCdLCpp3o2z6nBrayOn"],
-        UnsyncedLyricClass: ["lyrics-lyricsContent-unsynced", "SruqsAzX8rUtY2isUZDF", "HxblHEsl2WX2yhubfVIc"],
-        HighlightedLyricClass: ["lyrics-lyricsContent-highlight", "aeO5D7ulxy19q4qNBrkk", "MEjuIn9iTBQbnCqHpkoQ"],
-        ActiveLyricClass: ["lyrics-lyricsContent-active", "EhKgYshvOwpSrTv399Mw", "arY01KDGhWNgzlAHlhpd"]
+        LyricClass: ["lyrics-lyricsContent-lyric", "o69qODXrbOkf6Tv7fa51"],
+        UnsyncedLyricClass: ["lyrics-lyricsContent-unsynced", "eTLjCqbDo7QehPEPz86a"],
+        HighlightedLyricClass: ["lyrics-lyricsContent-highlight", "ve52ddYhoAd3Xf27Zxfm"],
+        ActiveLyricClass: ["lyrics-lyricsContent-active", "_gZrl2ExJwyxPy1pEUG2"]
     };
 
     private static SetIndexMap: Record<string, number> = {};
@@ -60,6 +64,19 @@ class Spotify {
         }
 
         return body.querySelector<T>(`.${Spotify.ComponentClasses[className][Spotify.SetIndexMap[className]]}`);
+    }
+
+    // Function to get a components by class name
+    static getComponents<T extends HTMLElement>(className: keyof typeof Spotify.ComponentClasses, body: HTMLElement = document.body): NodeListOf<T> {
+        if (Spotify.SetIndexMap[className] === undefined) {
+            Spotify.findSetIndex(className);
+        }
+
+        if (Spotify.SetIndexMap[className] === undefined) {
+            return document.createDocumentFragment().childNodes as NodeListOf<T>; // Return empty NodeList
+        }
+
+        return body.querySelectorAll<T>(`.${Spotify.ComponentClasses[className][Spotify.SetIndexMap[className]]}`);
     }
 
     // Function to check if the arrays match at any point

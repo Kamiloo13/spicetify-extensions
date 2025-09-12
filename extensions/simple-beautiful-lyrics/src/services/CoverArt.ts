@@ -15,9 +15,27 @@ const CoverArtContainerFilters = new Map<CoverArtContainer | "Default", string>(
 CoverArtContainerFilters.set("Default", "brightness(0.5) saturate(2.5)");
 CoverArtContainerFilters.set("SidePanel", "brightness(1) saturate(2.25)");
 
+const maxAttempts = 15;
+let attempts = 0;
+
 // Handle update requests
 const Update = () => {
-    const metadata = SpotifyPlayer.data.item.metadata;
+    // If there's no player data, wait and try again
+    if (!SpotifyPlayer.data && attempts < maxAttempts) {
+        setTimeout(Update, 100);
+        attempts++;
+        return;
+    }
+
+    // Reset attempts
+    attempts = 0;
+
+    const metadata: Spicetify.TrackMetadata | undefined = SpotifyPlayer.data?.item?.metadata;
+
+    if (!metadata) {
+        console.warn("No metadata available for the current track.", SpotifyPlayer.data);
+        return; // No metadata, nothing to do
+    }
 
     const newCoverArt = {
         Large: metadata.image_xlarge_url,

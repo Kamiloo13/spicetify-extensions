@@ -1,5 +1,5 @@
-$active-lyric-classes: ("lyrics-lyricsContent-active", "EhKgYshvOwpSrTv399Mw", "arY01KDGhWNgzlAHlhpd");
-$lyric-classes: ("lyrics-lyricsContent-lyric", "BJ1zQ_ReY3QPaS7SW46s", "NiCdLCpp3o2z6nBrayOn");
+$active-lyric-classes: ("lyrics-lyricsContent-active", "_gZrl2ExJwyxPy1pEUG2");
+$lyric-classes: ("lyrics-lyricsContent-lyric", "o69qODXrbOkf6Tv7fa51");
 
 // We need to override the hover effect since we changed the way the text is filled-in
 @each $class in $lyric-classes {
@@ -31,7 +31,7 @@ $lyric-classes: ("lyrics-lyricsContent-lyric", "BJ1zQ_ReY3QPaS7SW46s", "NiCdLCpp
 // When the active text grows in size we want more space between it and the surrounding lines
 @each $class in $active-lyric-classes {
     .#{$class} {
-        margin-top: 0.25em !important;
+        margin-top: -0.25em !important;
         margin-bottom: 0.25em !important;
     }
 }

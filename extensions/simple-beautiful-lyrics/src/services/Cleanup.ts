@@ -28,7 +28,7 @@ class Cleanup {
         return observer;
     }
 
-    AddHtml(element: HTMLElement, id?: string) {
+    AddHtml<T extends HTMLElement>(element: T, id?: string) {
         this.AddTask(() => {
             element.remove();
         }, id);

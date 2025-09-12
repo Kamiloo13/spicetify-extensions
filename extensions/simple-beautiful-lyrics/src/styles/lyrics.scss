@@ -22,6 +22,13 @@
     src: url("https://fonts.socalifornian.live/LyricsBold.woff2") format("woff2");
 }
 
-.lyrics-lyricsContent-text {
+.lyrics-lyricsContent-text,
+.MmIREVIj8A2aFVvBZ2Ev {
     font-family: "BeautifulLyrics", var(--encore-body-font-stack, var(--fallback-fonts, sans-serif)), sans-serif !important;
+}
+
+.lyrics-lyrics-contentWrapper,
+.t_dtt9KL1wnNRvRO_y5L {
+    --encore-text-size-larger-3: 2.4rem;
+    width: min(100% - 128px, 1024px + 10%) !important;
 }

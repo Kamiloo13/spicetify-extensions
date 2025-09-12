@@ -14,11 +14,11 @@
     },
     "license": "MIT",
     "devDependencies": {
-        "@types/node": "^22.15.18",
-        "@types/react": "^19.1.4",
-        "@types/react-dom": "^19.1.5",
-        "eslint": "^9.26.0",
+        "@types/node": "^22.18.1",
+        "@types/react": "^19.1.12",
+        "@types/react-dom": "^19.1.9",
+        "eslint": "^9.35.0",
         "spicetify-creator": "^1.0.17",
-        "typescript-eslint": "^8.32.1"
+        "typescript-eslint": "^8.43.0"
     }
 }
