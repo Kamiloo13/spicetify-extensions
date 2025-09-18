@@ -35,7 +35,7 @@ async function main() {
         const fetchOverrideToggle = Boolean(settings.getFieldValue("override-fetch"));
         toggleFetchOverride(fetchOverrideToggle);
     });
-    settings.addInput("api-input-endpoint", `API Endpoint (default: ${DEFAULT_API_ENDPOINT})`, DEFAULT_API_ENDPOINT, () => {}, "text", {
+    settings.addInput("api-input-endpoint", `API Endpoint (default: ${DEFAULT_API_ENDPOINT})`, DEFAULT_API_ENDPOINT, false, () => {}, "text", {
         onBlur: (e) => {
             const endpoint = e.target.value;
 
@@ -56,7 +56,7 @@ async function main() {
         }
     });
     settings.addHidden("api-token", "");
-    settings.addInput("api-token-input", "API Token (optional)", "", () => {}, "text", {
+    settings.addInput("api-token-input", "API Token (optional)", "", true, () => {}, "text", {
         onBlur: (e) => {
             const token = e.target.value;
             if (token === settings.getFieldValue("api-token")) return;

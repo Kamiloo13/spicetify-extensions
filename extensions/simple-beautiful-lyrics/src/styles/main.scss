@@ -1,5 +1,10 @@
 $active-lyric-classes: ("lyrics-lyricsContent-active", "_gZrl2ExJwyxPy1pEUG2");
 $lyric-classes: ("lyrics-lyricsContent-lyric", "o69qODXrbOkf6Tv7fa51");
+$fullscreen-background-classes: ("lyrics-lyrics-background", "RFThkjLuWfPUO9shrMOZ");
+
+:root {
+    --sbl-lyrics-background-gradient: linear-gradient(90deg, rgba(10, 10, 10, 0.54), rgba(0, 0, 0, 0));
+}
 
 // We need to override the hover effect since we changed the way the text is filled-in
 @each $class in $lyric-classes {
@@ -33,6 +38,15 @@ $lyric-classes: ("lyrics-lyricsContent-lyric", "o69qODXrbOkf6Tv7fa51");
     .#{$class} {
         margin-top: -0.25em !important;
         margin-bottom: 0.25em !important;
+    }
+}
+
+@each $class in $fullscreen-background-classes {
+    .#{$class} {
+        background-color: transparent !important;
+        background-image: var(--sbl-lyrics-background-gradient) !important;
+        background-size: cover;
+        background-repeat: no-repeat;
     }
 }
 
@@ -89,7 +103,7 @@ $lyric-classes: ("lyrics-lyricsContent-lyric", "o69qODXrbOkf6Tv7fa51");
         position: absolute;
         width: 200%;
         /*aspect-ratio: 1/1;*/
-        animation: rotate 35s linear infinite;
+        animation: rotateSBL 35s linear infinite;
 
         /* Align our image to the center of our div */
         /*img, canvas {
@@ -139,19 +153,5 @@ $lyric-classes: ("lyrics-lyricsContent-lyric", "o69qODXrbOkf6Tv7fa51");
 
     100% {
         transform: rotate(360deg);
-    }
-}
-
-:root {
-    --beautiful-lyrics-random-degree: 258deg;
-}
-
-@keyframes rotate {
-    0% {
-        transform: rotate(var(--beautiful-lyrics-random-degree));
-    }
-
-    100% {
-        transform: rotate(calc(var(--beautiful-lyrics-random-degree) + 360deg));
     }
 }

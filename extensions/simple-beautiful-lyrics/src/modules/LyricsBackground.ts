@@ -8,7 +8,7 @@ import "../styles/main.scss";
 const BackgroundElements = ["lyrics-background-color", "lyrics-background-back", "lyrics-background-back-center"]; // Own class names
 
 const BackgroundMainCleanup = GlobalCleanup.AddSubCleanup(new Cleanup(), "LiveMainBackgrounds");
-const BackgroundSidebarCleanup = GlobalCleanup.AddSubCleanup(new Cleanup(), "LiveSidebarBackgrounds");
+// const BackgroundSidebarCleanup = GlobalCleanup.AddSubCleanup(new Cleanup(), "LiveSidebarBackgrounds");
 
 const ManageLyricsBackground = (container: HTMLDivElement) => {
     // Create our container and child-images
@@ -60,65 +60,65 @@ const ManageLyricsBackground = (container: HTMLDivElement) => {
     BackgroundMainCleanup.AddTask(() => container.classList.remove("lyrics-background"));
 };
 
-const ManageLyricsBackgroundSidebar = (container: HTMLDivElement) => {
-    const backgroundContainer = BackgroundSidebarCleanup.AddHtml(document.createElement("div"));
-    backgroundContainer.classList.add("lyrics-background-container");
-    backgroundContainer.style.zIndex = "-1";
+// const ManageLyricsBackgroundSidebar = (container: HTMLDivElement) => {
+//     const backgroundContainer = BackgroundSidebarCleanup.AddHtml(document.createElement("div"));
+//     backgroundContainer.classList.add("lyrics-background-container");
+//     backgroundContainer.style.zIndex = "-1";
 
-    // Create all our elements
-    const elements: HTMLImageElement[] = [];
-    for (const elementClass of BackgroundElements) {
-        // Create our image
-        const image = BackgroundSidebarCleanup.AddHtml(document.createElement("img"));
-        image.classList.add(elementClass);
-        backgroundContainer.appendChild(image);
+//     // Create all our elements
+//     const elements: HTMLImageElement[] = [];
+//     for (const elementClass of BackgroundElements) {
+//         // Create our image
+//         const image = BackgroundSidebarCleanup.AddHtml(document.createElement("img"));
+//         image.classList.add(elementClass);
+//         backgroundContainer.appendChild(image);
 
-        // Now store our element
-        elements.push(image as HTMLImageElement);
-    }
+//         // Now store our element
+//         elements.push(image as HTMLImageElement);
+//     }
 
-    const UpdateCoverArt = () => {
-        const coverArt = GetCoverArt();
-        const source = coverArt?.Default ?? "";
+//     const UpdateCoverArt = () => {
+//         const coverArt = GetCoverArt();
+//         const source = coverArt?.Default ?? "";
 
-        for (const element of elements) {
-            element.src = source;
-        }
-    };
+//         for (const element of elements) {
+//             element.src = source;
+//         }
+//     };
 
-    BackgroundSidebarCleanup.AddTask(CoverArtUpdated.Connect(UpdateCoverArt));
-    UpdateCoverArt();
+//     BackgroundSidebarCleanup.AddTask(CoverArtUpdated.Connect(UpdateCoverArt));
+//     UpdateCoverArt();
 
-    // Handle applying our background-class
-    const CheckClass = () => {
-        if (container.classList.contains("lyrics-background")) {
-            return;
-        }
+//     // Handle applying our background-class
+//     const CheckClass = () => {
+//         if (container.classList.contains("lyrics-background")) {
+//             return;
+//         }
 
-        container.classList.add("lyrics-background");
-    };
+//         container.classList.add("lyrics-background");
+//     };
 
-    container.style.position = "relative";
+//     container.style.position = "relative";
 
-    // Immediately check our class and watch for changes
-    CheckClass();
+//     // Immediately check our class and watch for changes
+//     CheckClass();
 
-    const observer = BackgroundSidebarCleanup.AddObserver(new MutationObserver(CheckClass));
-    observer.observe(container, { attributes: true, attributeFilter: ["class"], childList: false, subtree: false });
+//     const observer = BackgroundSidebarCleanup.AddObserver(new MutationObserver(CheckClass));
+//     observer.observe(container, { attributes: true, attributeFilter: ["class"], childList: false, subtree: false });
 
-    // Add our container to the background
-    container.prepend(backgroundContainer);
+//     // Add our container to the background
+//     container.prepend(backgroundContainer);
 
-    BackgroundSidebarCleanup.AddTask(() => {
-        container.classList.remove("lyrics-background");
-        container.style.position = "";
-    });
-};
+//     BackgroundSidebarCleanup.AddTask(() => {
+//         container.classList.remove("lyrics-background");
+//         container.style.position = "";
+//     });
+// };
 
 let ExistingContainerMain: HTMLDivElement | null = null;
-let ExistingContainerSidebar: HTMLDivElement | null = null;
+// let ExistingContainerSidebar: HTMLDivElement | null = null;
 let prevMain: HTMLDivElement | null = null;
-const CheckForLiveBackgroundsMain = (mainLyricsContainer: HTMLDivElement | null) => {
+const CheckForLiveBackgrounds = (mainLyricsContainer: HTMLDivElement | null) => {
     const fullScreenContainer = mainLyricsContainer ? Spotify.getComponent<HTMLDivElement>("FullScreenLyricsBackgroundClass", mainLyricsContainer) : null;
 
     if (ExistingContainerMain === fullScreenContainer) {
@@ -130,7 +130,6 @@ const CheckForLiveBackgroundsMain = (mainLyricsContainer: HTMLDivElement | null)
         BackgroundMainCleanup.Clean();
     } else {
         ExistingContainerMain = fullScreenContainer;
-        fullScreenContainer.style.background = "linear-gradient(90deg, #0a0a0a8a, #0000)";
 
         const normalBackgroundContainer = mainLyricsContainer?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.querySelector(
             ".before-scroll-node"
@@ -159,25 +158,25 @@ const CheckForLiveBackgroundsMain = (mainLyricsContainer: HTMLDivElement | null)
     }
 };
 
-const CheckForLiveBackgroundsSidebar = (mainLyricsContainer: HTMLDivElement | null) => {
-    const sidebarContainer = mainLyricsContainer ? Spotify.getComponent<HTMLDivElement>("SidebarLyricsBackgroundClass", mainLyricsContainer) : null;
+// const CheckForLiveBackgroundsSidebar = (mainLyricsContainer: HTMLDivElement | null) => {
+//     const sidebarContainer = mainLyricsContainer ? Spotify.getComponent<HTMLDivElement>("SidebarLyricsBackgroundClass", mainLyricsContainer) : null;
 
-    if (ExistingContainerSidebar === sidebarContainer) {
-        return;
-    }
+//     if (ExistingContainerSidebar === sidebarContainer) {
+//         return;
+//     }
 
-    if (sidebarContainer === null) {
-        ExistingContainerSidebar = null;
-        BackgroundSidebarCleanup.Clean();
-    } else {
-        ExistingContainerSidebar = sidebarContainer;
-        ManageLyricsBackgroundSidebar(sidebarContainer);
-    }
-};
+//     if (sidebarContainer === null) {
+//         ExistingContainerSidebar = null;
+//         BackgroundSidebarCleanup.Clean();
+//     } else {
+//         ExistingContainerSidebar = sidebarContainer;
+//         ManageLyricsBackgroundSidebar(sidebarContainer);
+//     }
+// };
 
-const CheckForLiveBackgrounds = (mainLyricsContainer: HTMLDivElement | null) => {
-    CheckForLiveBackgroundsMain(mainLyricsContainer);
-    CheckForLiveBackgroundsSidebar(mainLyricsContainer);
-};
+// const CheckForLiveBackgrounds = (mainLyricsContainer: HTMLDivElement | null) => {
+//     CheckForLiveBackgroundsMain(mainLyricsContainer);
+//     // CheckForLiveBackgroundsSidebar(mainLyricsContainer);
+// };
 
 export { CheckForLiveBackgrounds };
