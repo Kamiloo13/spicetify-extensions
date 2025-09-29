@@ -25,6 +25,7 @@ const setIsMenuActive = (value: boolean) => {
 };
 
 const updateDOM = () => {
+    // @ts-expect-error - React deprecation error (we can ignore it)
     ReactDOM.render(<SleepTimerMenu isVisible={isMenuActive} setIsMenuActive={setIsMenuActive} updateDom={updateDOM} sleepTimerButton={sleepTimerButton} />, SleepMenuContainer);
 };
 

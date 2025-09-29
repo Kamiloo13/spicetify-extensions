@@ -8,7 +8,6 @@ export interface ISettingsFieldInput {
     description?: string;
     defaultValue: any;
     inputType?: string;
-    floatLeft?: boolean;
     events?: Partial<React.InputHTMLAttributes<HTMLInputElement>>;
 }
 
@@ -17,7 +16,6 @@ export interface ISettingsFieldDropdown {
     description?: string;
     defaultValue: string;
     options: string[];
-    floatLeft?: boolean;
     events?: Partial<React.SelectHTMLAttributes<HTMLSelectElement>>;
 }
 

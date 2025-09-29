@@ -9,7 +9,7 @@
         "start": "spicetify config extensions sleep-timer-updated.js & spicetify apply enable-devtools",
         "disable": "spicetify config extensions sleep-timer-updated.js- & spicetify apply",
         "lint": "eslint .",
-        "update-types": "curl -s -o ./src/types/spicetify.d.ts https://raw.githubusercontent.com/spicetify/spicetify-cli/master/globals.d.ts"
+        "update-types": "curl -s -o ../../lib/spicetify-types/spicetify.d.ts https://raw.githubusercontent.com/spicetify/spicetify-cli/master/globals.d.ts"
     },
     "license": "MIT",
     "devDependencies": {

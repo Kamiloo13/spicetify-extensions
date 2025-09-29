@@ -28,5 +28,23 @@
                 "url": "https://github.com/kamiloo13"
             }
         ]
+    },
+    {
+        "name": "More Lyrics",
+        "description": "More lyrics providers for the default Lyrics Page (uses official Spotify scripts for display).",
+        "preview": "extensions/more-lyrics/preview.png",
+        "main": "extensions/more-lyrics/dist/more-lyrics.js",
+        "readme": "extensions/more-lyrics/README.md",
+        "authors": [
+            {
+                "name": "Kamiloo13",
+                "url": "https://github.com/kamiloo13"
+            }
+        ],
+        "tags": [
+            "lyrics",
+            "more providers",
+            "community lyrics"
+        ]
     }
 ]

@@ -5,7 +5,7 @@
 
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { ISettingsField, ISettingsFieldButton, ISettingsFieldDropdown, ISettingsFieldInput, ISettingsFieldToggle } from "../types/settings-field";
+import { ISettingsField, ISettingsFieldButton, ISettingsFieldDropdown, ISettingsFieldInput, ISettingsFieldToggle } from "./types/settings-field";
 
 class SettingsSection {
     private settingsFields: { [nameId: string]: ISettingsField } = {};
@@ -81,12 +81,7 @@ class SettingsSection {
             toggleIndicatorWrapper: this.getClassByPath(allSettingsContainer, [3, 1, 1, 0, 0, 1], "x-toggle-indicatorWrapper"),
             toggleIndicator: this.getClassByPath(allSettingsContainer, [3, 1, 1, 0, 0, 1, 0], "x-toggle-indicator"),
             mainDropDown: this.getClassByPath(allSettingsContainer, [5, 1, 1, 0, 0], "main-dropDown-dropDown"),
-            textInput: "e-91000-form-input e-91000-baseline e-91000-form-control encore-text-body-medium main-topBar-searchBar Mx356zpxhMqMxje_7QXv",
-            settingsSingleColumn: this.getClassByPath(allSettingsContainer, [13, 1], "k5yrn4bTRFh4dMUyEtX2"),
-            groupContainer: this.getClassByPath(allSettingsContainer, [13, 1, 0], "Group-sc-u9bcx5-0 Group-formGroup rSF8UwLzWlq43BzcPjy9"),
-            groupLabel: this.getClassByPath(allSettingsContainer, [13, 1, 0, 0], "LabelGroup-sc-1ibddrg-0 LabelGroup encore-text-body-small-bold"),
-            labelContainer: this.getClassByPath(allSettingsContainer, [13, 1, 0, 0, 0], "Label-sc-1c0cv3r-0 klvvqC"),
-            labelInner: this.getClassByPath(allSettingsContainer, [13, 1, 0, 0, 0, 0], "LabelInner-sc-19pye2k-0 cCdxWn")
+            textInput: "e-91000-form-input e-91000-baseline e-91000-form-control encore-text-body-medium main-topBar-searchBar Mx356zpxhMqMxje_7QXv"
         };
 
         this.areClassNamesInitialized = true;
@@ -112,7 +107,7 @@ class SettingsSection {
             allSettingsContainer.appendChild(pluginSettingsContainer);
         }
 
-        // @ts-ignore - React deprecation error (we can ignore it)
+        // @ts-expect-error - React deprecation error (we can ignore it)
         ReactDOM.render(<this.FieldsContainer />, pluginSettingsContainer);
     };
 
@@ -128,21 +123,12 @@ class SettingsSection {
         };
     };
 
-    addInput = (
-        nameId: string,
-        description: string,
-        defaultValue: string,
-        floatLeft?: boolean,
-        onChange?: () => void,
-        inputType?: string,
-        events?: ISettingsFieldInput["events"]
-    ) => {
+    addInput = (nameId: string, description: string, defaultValue: string, onChange?: () => void, inputType?: string, events?: ISettingsFieldInput["events"]) => {
         this.settingsFields[nameId] = {
             type: "input",
             description: description,
             defaultValue: defaultValue,
             inputType: inputType,
-            floatLeft: floatLeft,
             events: {
                 onChange: onChange,
                 ...events
@@ -169,21 +155,12 @@ class SettingsSection {
         };
     };
 
-    addDropDown = (
-        nameId: string,
-        description: string,
-        options: string[],
-        defaultIndex: number,
-        floatLeft?: boolean,
-        onSelect?: () => void,
-        events?: ISettingsFieldDropdown["events"]
-    ) => {
+    addDropDown = (nameId: string, description: string, options: string[], defaultIndex: number, onSelect?: () => void, events?: ISettingsFieldDropdown["events"]) => {
         this.settingsFields[nameId] = {
             type: "dropdown",
             description: description,
             defaultValue: options[defaultIndex],
             options: options,
-            floatLeft: floatLeft,
             events: {
                 onSelect: onSelect,
                 ...events
@@ -235,60 +212,6 @@ class SettingsSection {
                 this.setFieldValue(props.nameId!, newValue);
             }
         };
-
-        if ((props.field.type === "input" || props.field.type === "dropdown") && props.field.floatLeft) {
-            return (
-                <div className={this.spotifyClasses.settingsSingleColumn}>
-                    <div className={this.spotifyClasses.groupContainer}>
-                        <div className={this.spotifyClasses.groupLabel}>
-                            <label className={this.spotifyClasses.labelContainer} htmlFor={id}>
-                                <span className={this.spotifyClasses.labelInner}>{props.field.description || ""}</span>
-                            </label>
-                        </div>
-                        {props.field.type === "input" ? (
-                            <input
-                                className={this.spotifyClasses.textInput}
-                                id={id}
-                                dir="ltr"
-                                autoCorrect="off"
-                                autoCapitalize="off"
-                                spellCheck={false}
-                                value={value as string}
-                                type={props.field.inputType || "text"}
-                                placeholder={(props.field as ISettingsFieldInput).defaultValue}
-                                {...props.field.events}
-                                onChange={(e) => {
-                                    setValue(e.currentTarget.value);
-                                    const onChange = (props.field as ISettingsFieldInput).events?.onChange;
-                                    if (onChange) onChange(e);
-                                }}
-                            />
-                        ) : (
-                            <span>
-                                <select
-                                    className={this.spotifyClasses.mainDropDown}
-                                    id={id}
-                                    {...props.field.events}
-                                    onChange={(e) => {
-                                        setValue((props.field as ISettingsFieldDropdown).options[e.currentTarget.selectedIndex]);
-                                        const onChange = (props.field as ISettingsFieldDropdown).events?.onChange;
-                                        if (onChange) onChange(e);
-                                    }}
-                                >
-                                    {props.field.options.map((option, i) => {
-                                        return (
-                                            <option selected={option === value} value={i + 1}>
-                                                {option}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
-                            </span>
-                        )}
-                    </div>
-                </div>
-            );
-        }
 
         return (
             <div className={this.spotifyClasses.settingsRow}>

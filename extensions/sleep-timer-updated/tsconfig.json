@@ -3,7 +3,5 @@
     "compilerOptions": {
         "outDir": "./dist"
     },
-    "include": [
-        "./src/**/*"
-    ]
+    "include": ["./src/**/*", "../../lib/spicetify-types/spicetify.d.ts", "../../lib/spicetify-types/css-modules.d.ts"]
 }

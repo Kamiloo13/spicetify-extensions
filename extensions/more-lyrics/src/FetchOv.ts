@@ -1,17 +1,17 @@
-import { LyricCached, LyricsResponse, NowPlaylingSpotifyMetadata, SpMetadataFetch } from "../types/fetch";
-import { log } from "./Logger";
+import { LyricCached, LyricsResponse, NowPlaylingSpotifyMetadata, SpMetadataFetch } from "./types/fetch";
+import { error, log } from "./Logger";
 
 export const fetchFunction = window.fetch;
 
 const MAX_CACHE_SIZE = 100;
-const KEY = "simple-beautiful-lyrics:cache-lyrics";
+const KEY = "more-lyrics.cache-lyrics";
 const LyricsDataBank: LyricCached[] = [];
 
 let RequestCount = 0;
 let CurrentRequestId = 0;
 
 export const getFieldValue = (nameId: string) => {
-    return JSON.parse(Spicetify.LocalStorage.get(`simple-beautiful-lyrics.${nameId}`) || "{}")?.value;
+    return JSON.parse(Spicetify.LocalStorage.get(`more-lyrics.${nameId}`) || "{}")?.value;
 };
 
 const checkOverflow = () => {
@@ -63,7 +63,7 @@ const loadLyricsFromCache = () => {
             LyricsDataBank.push(...(JSON.parse(cachedData) as LyricCached[]));
             log("Lyrics Data Bank loaded from cache");
         } catch (e) {
-            console.error("[SBL]: Error while parsing cached data", e);
+            error("Error while parsing cached data. Clearing cache...", e);
             clearLyricsCache();
         }
     }
@@ -76,7 +76,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
             const canonicalId = url.split("/").at(6);
 
             if (!canonicalId) {
-                console.error("[SBL]: Canonical ID not found in 'color-lyrics' fetch");
+                error("Canonical ID not found in 'color-lyrics' fetch");
                 return fetchFunction(...args);
             }
 
@@ -84,7 +84,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
             try {
                 await waitForTurn(RequestCount++);
             } catch (e) {
-                console.error("[SBL]:", e);
+                error(e);
                 CurrentRequestId++;
                 return fetchFunction(...args);
             }
@@ -152,7 +152,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
             const gId = url.split("/").at(6)?.split("?").at(0);
 
             if (!gId) {
-                console.error("[SBL]: GID not found in 'metadata' fetch");
+                error("GID not found in 'metadata' fetch");
                 return fetchFunction(...args);
             }
 
@@ -160,7 +160,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
             try {
                 await waitForTurn(RequestCount++);
             } catch (e) {
-                console.error("[SBL]:", e);
+                error(e);
                 CurrentRequestId++;
                 return fetchFunction(...args);
             }
@@ -193,7 +193,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                 response = await fetchFunction(...args);
                 data = await response.clone().json();
             } catch (e) {
-                console.error("[SBL]: Error while fetching metadata", e);
+                error("Error while fetching metadata", e);
                 CurrentRequestId++;
                 return fetchFunction(...args);
             }
@@ -216,7 +216,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
             // Spotify username is used in here ONLY for the Ratelimitter to work properly (API key is not required but it disables the rate limiter)
             // If you want to use the API key, you can set it in the settings
             const apiResponse = await fetchFunction(
-                `${getFieldValue("api-endpoint") ?? "https://lyrics.kamiloo13.me"}/get?artist=${data.artist[0].name}&track=${data.name}&duration=${Math.round(
+                `${getFieldValue("api-endpoint") ?? "https://lyrics.kamiloo13.me/api"}/get?artist=${data.artist[0].name}&track=${data.name}&duration=${Math.round(
                     data.duration / 1000
                 )}&album=${data.album.name}&username=${Spicetify.Platform.username}`,
                 token
@@ -262,7 +262,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                     lines: apiLyrics.lines,
                     previewLines: apiLyrics.lines.slice(0, 5),
                     provider: apiLyrics.provider,
-                    providerDisplayName: apiLyrics.providerLyricsDisplayName + " (simple-beautiful-lyrics)",
+                    providerDisplayName: apiLyrics.providerLyricsDisplayName + " (more-lyrics)",
                     providerLyricsId: apiLyrics.providerLyricsId,
                     syncLyricsUri: "",
                     syncType: apiLyrics.isSynced ? "LINE_SYNCED" : "UNSYNCED"

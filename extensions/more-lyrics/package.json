@@ -1,14 +1,13 @@
 {
-    "name": "simple-beautiful-lyrics",
-    "version": "1.3.0",
+    "name": "more-lyrics",
+    "version": "1.0.0",
     "private": true,
     "scripts": {
         "build": "spicetify-creator",
         "build-local": "spicetify-creator --out=dist --minify",
-        "build-local-no-disable": "spicetify-creator --out=local --minify",
         "watch": "spicetify-creator --watch",
-        "start": "spicetify config extensions simple-beautiful-lyrics.js & spicetify apply enable-devtools",
-        "disable": "spicetify config extensions simple-beautiful-lyrics.js- & spicetify apply",
+        "start": "spicetify config extensions more-lyrics.js & spicetify apply enable-devtools",
+        "disable": "spicetify config extensions more-lyrics.js- & spicetify apply",
         "lint": "eslint .",
         "update-types": "curl -s -o ../../lib/spicetify-types/spicetify.d.ts https://raw.githubusercontent.com/spicetify/spicetify-cli/master/globals.d.ts"
     },
