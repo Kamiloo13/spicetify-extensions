@@ -1,6 +1,7 @@
 $active-lyric-classes: ("lyrics-lyricsContent-active", "_gZrl2ExJwyxPy1pEUG2");
 $lyric-classes: ("lyrics-lyricsContent-lyric", "o69qODXrbOkf6Tv7fa51");
 $fullscreen-background-classes: ("lyrics-lyrics-background", "RFThkjLuWfPUO9shrMOZ");
+$cinematic-background-classes: ("x81eiLoZ5zWkSS1y28Oj");
 
 :root {
     --sbl-lyrics-background-gradient: linear-gradient(90deg, rgba(10, 10, 10, 0.54), rgba(0, 0, 0, 0));
@@ -47,6 +48,12 @@ $fullscreen-background-classes: ("lyrics-lyrics-background", "RFThkjLuWfPUO9shrM
         background-image: var(--sbl-lyrics-background-gradient) !important;
         background-size: cover;
         background-repeat: no-repeat;
+    }
+}
+
+@each $class in $cinematic-background-classes {
+    .#{$class} {
+        animation: background-fadeout 2s ease-in-out forwards;
     }
 }
 
@@ -153,5 +160,15 @@ $fullscreen-background-classes: ("lyrics-lyrics-background", "RFThkjLuWfPUO9shrM
 
     100% {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes background-fadeout {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }

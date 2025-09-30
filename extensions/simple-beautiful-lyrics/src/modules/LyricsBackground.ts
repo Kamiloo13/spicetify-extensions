@@ -148,9 +148,6 @@ const CheckForLiveBackgrounds = (mainLyricsContainer: HTMLDivElement | null) => 
         // Create a div element on the 5th parent element
         const parentElement = Spotify.getComponent<HTMLDivElement>("CinemaModeContainerToInjectBackground", document.body);
         if (parentElement) {
-            const uselessElem = Spotify.getComponent<HTMLDivElement>("CinemaModeBackgroundToRemove", parentElement);
-            if (uselessElem) uselessElem.style.background = "none";
-
             const newDiv = BackgroundMainCleanup.AddHtml(document.createElement("div"));
             parentElement.prepend(newDiv);
             ManageLyricsBackground(newDiv);
