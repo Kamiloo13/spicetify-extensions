@@ -2,7 +2,7 @@ name: 🐛 Bug report
 description: Report errors or unexpected behaviour
 labels: bug
 title: "[Bug] <Extension name>:"
-assignees: Kamiloo13
+assignees: ["Kamiloo13", "copilot"]
 body:
     - type: checkboxes
       attributes:
