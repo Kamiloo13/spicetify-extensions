@@ -34,6 +34,7 @@ The default API currently integrates:
 
 -   **[LRCLIB](https://lrclib.net/)** → Provides community made synced and unsynced lyrics
 -   **[lyrics.ovh](https://lyrics.ovh/)** → Backup provider for unsynced lyrics
+-   **[Genius](https://genius.com/)** → Last resort for finding lyrics (could be removed in future)
 
 My API includes a **caching system** to reduce load and speed up responses. Cached lyrics are stored for **1 day** before being refreshed.
 
