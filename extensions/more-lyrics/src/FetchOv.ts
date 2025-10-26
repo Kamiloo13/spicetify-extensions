@@ -218,7 +218,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
             const apiResponse = await fetchFunction(
                 `${getFieldValue("api-endpoint") ?? "https://lyrics.kamiloo13.me/api"}/get?artist=${data.artist[0].name}&track=${data.name}&duration=${Math.round(
                     data.duration / 1000
-                )}&album=${data.album.name}&username=${Spicetify.Platform.username}`,
+                )}&album=${data.album.name}&username=${Spicetify.Platform.username}&country=${getFieldValue("country-code") ?? ""}`,
                 token
                     ? {
                           method: "GET",

@@ -5,7 +5,7 @@ import { setLogEnabled } from "./Logger";
 
 const DEFAULT_API_ENDPOINT = "https://lyrics.kamiloo13.me/api";
 const URL_REGEX = /^https?:\/\/([\w-]+(\.[\w-]+)+|localhost)(:[0-9]{1,5})?(\/[^\s\?]*)?$/;
-const CacheVersion = "1";
+const CacheVersion = "2";
 
 async function main() {
     const settings = new SettingsSection("More Lyrics", "more-lyrics");
@@ -16,6 +16,14 @@ async function main() {
     } else {
         settings.setFieldValue("api-endpoint", DEFAULT_API_ENDPOINT);
         settings.setFieldValue("api-input-endpoint", DEFAULT_API_ENDPOINT);
+    }
+
+    const countryCode = settings.getFieldValue("country-code") as string;
+    if (countryCode.length === 2 || countryCode.length === 0) {
+        settings.setFieldValue("country-code-input", countryCode);
+    } else {
+        settings.setFieldValue("country-code", "");
+        settings.setFieldValue("country-code-input", "");
     }
 
     // Add settings
@@ -50,6 +58,19 @@ async function main() {
             if (token === settings.getFieldValue("api-token")) return;
             settings.setFieldValue("api-token", token);
             Spicetify.showNotification("API Token saved!");
+        }
+    });
+    settings.addInput("country-code-input", "Country Code (optional, ISO 3166-1 alpha-2)", "", () => {}, "text", {
+        onBlur: (e) => {
+            const code = e.target.value.toUpperCase();
+            if (code.length !== 2 && code.length !== 0) {
+                e.target.value = settings.getFieldValue("country-code");
+                Spicetify.showNotification("Invalid Country Code. It must be 2 characters long or empty.");
+                return;
+            }
+            if (code === settings.getFieldValue("country-code")) return;
+            settings.setFieldValue("country-code", code);
+            Spicetify.showNotification("Country Code saved!");
         }
     });
     settings.addToggle("enable-debug", "Enable debug logging", false, () => {
