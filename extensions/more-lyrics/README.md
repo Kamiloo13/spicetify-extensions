@@ -23,6 +23,7 @@ You can even host your own API or connect to other providers of your choice; giv
 | ⚙️Toggle | Overrides Spotify's `fetch` function to enable searching for alternative lyric sources | ✅ On                             |
 | 📝Text   | API Endpoint                                                                           | `https://lyrics.kamiloo13.me/api` |
 | 📝Text   | Custom API Token (optional, bypasses rate limits)                                      | (empty)                           |
+| 📝Text   | Country Code (optional, higher chance of finding correct lyrics)                       | (empty)                           |
 | ⚙️Toggle | Enables Debbuging                                                                      | ❌ Off                            |
 | 📩Button | Clear local cache                                                                      | -                                 |
 
@@ -32,11 +33,12 @@ You can even host your own API or connect to other providers of your choice; giv
 
 The default API currently integrates:
 
--   **[LRCLIB](https://lrclib.net/)** → Provides community made synced and unsynced lyrics
--   **[lyrics.ovh](https://lyrics.ovh/)** → Backup provider for unsynced lyrics
--   **[Genius](https://genius.com/)** → Last resort for finding lyrics (could be removed in future)
+-   **[LRCLIB](https://lrclib.net/)**
+-   **[lyrics.ovh](https://lyrics.ovh/)**
+-   **[lyricfind.com](https://lyrics.lyricfind.com/)** (could be removed in future)
+-   **[Genius](https://genius.com/)** (could be removed in future)
 
-My API includes a **caching system** to reduce load and speed up responses. Cached lyrics are stored for **1 day** before being refreshed.
+My API includes a **caching system** to reduce load and speed up responses. Cached lyrics are stored for **1 week** before being refreshed.
 
 > Know a free lyrics API worth adding? Open an issue with the details. I’d be happy to expand the list of supported providers!
 
@@ -46,7 +48,7 @@ You can configure your own API endpoint.
 It will receive requests in this format (with `Authorization: Bearer <token>` header if `API Token` is specified):
 
 ```
-/get?artist=<artist name>&track=<track title>&duration=<duration (seconds)>&album=<album name>&username=<Spotify Name/ID>
+/get?artist=<artist name>&track=<track title>&duration=<duration (seconds)>&album=<album name>&username=<Spotify Name/ID>&country=<contry code [PL, US, DE]>
 ```
 
 ```json
@@ -79,6 +81,7 @@ Found a bug or have an idea? Feel free to submit an issue or a pull request!
     <summary><b>Version 1.0</b></summary>
 
     - Initial release
-    - Migrated fetch logic from Simple Beautiful Lyrics for better accessibility
+    - Migrate fetch logic from Simple Beautiful Lyrics for better accessibility
+    - Add "Contry Code" options to settings. This allows 'lyricsfind.com' to operate with a better chance of success.
 
 </details>
