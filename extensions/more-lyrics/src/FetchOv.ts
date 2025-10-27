@@ -10,8 +10,8 @@ const LyricsDataBank: LyricCached[] = [];
 let RequestCount = 0;
 let CurrentRequestId = 0;
 
-export const getFieldValue = (nameId: string) => {
-    return JSON.parse(Spicetify.LocalStorage.get(`more-lyrics.${nameId}`) || "{}")?.value;
+export const getFieldValue = <Type,>(nameId: string) => {
+    return JSON.parse(Spicetify.LocalStorage.get(`more-lyrics.${nameId}`) || "{}")?.value as Type | undefined;
 };
 
 const checkOverflow = () => {
@@ -211,14 +211,15 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
                 return response;
             }
 
-            const token = getFieldValue("api-token");
+            const token = getFieldValue<string>("api-token");
+            const code = getFieldValue<string>("country-code");
 
             // Spotify username is used in here ONLY for the Ratelimitter to work properly (API key is not required but it disables the rate limiter)
             // If you want to use the API key, you can set it in the settings
             const apiResponse = await fetchFunction(
-                `${getFieldValue("api-endpoint") ?? "https://lyrics.kamiloo13.me/api"}/get?artist=${data.artist[0].name}&track=${data.name}&duration=${Math.round(
+                `${getFieldValue<string>("api-endpoint") ?? "https://lyrics.kamiloo13.me/api"}/get?artist=${data.artist[0].name}&track=${data.name}&duration=${Math.round(
                     data.duration / 1000
-                )}&album=${data.album.name}&username=${Spicetify.Platform.username}&country=${getFieldValue("country-code") ?? ""}`,
+                )}&album=${data.album.name}&username=${Spicetify.Platform.username}${code ? `&country=${code}` : ""}`,
                 token
                     ? {
                           method: "GET",
