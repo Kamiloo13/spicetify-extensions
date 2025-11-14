@@ -10,7 +10,7 @@ const LyricsDataBank: LyricCached[] = [];
 let RequestCount = 0;
 let CurrentRequestId = 0;
 
-export const getFieldValue = <Type,>(nameId: string) => {
+export const getFieldValue = <Type>(nameId: string) => {
     return JSON.parse(Spicetify.LocalStorage.get(`more-lyrics.${nameId}`) || "{}")?.value as Type | undefined;
 };
 
@@ -112,7 +112,7 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
             const nowPlayingId = nowPlaying?.uri?.split(":").at(-1);
             const nextPlaying = Spicetify.Queue.nextTracks?.[0]?.contextTrack as NowPlaylingSpotifyMetadata;
             const nextPlayingId = nextPlaying?.uri?.split(":").at(-1);
-            const lastRecords = LyricsDataBank.slice(-5).filter((x) => x.metadata);
+            const lastRecords = LyricsDataBank.filter((x) => x.metadata);
 
             if (nowPlayingId === canonicalId) {
                 const foundRecord = lastRecords.find((x) => x.metadata?.artist_name === nowPlaying.metadata.artist_name && x.metadata?.title === nowPlaying.metadata.title);
