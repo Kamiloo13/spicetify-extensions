@@ -31,6 +31,8 @@ $cinematic-background-classes: ("x81eiLoZ5zWkSS1y28Oj");
         --lyrics-color-inactive: rgb(240 240 240 / 51%) !important;
         font-weight: 700;
         margin-bottom: 0.5em !important;
+        cursor: pointer;
+        transition: font-size 0.05s ease-out, margin 0.05s ease-out;
     }
 }
 
