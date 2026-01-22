@@ -50,14 +50,29 @@ interface LyricsSynched {
     words: string;
     syllables: string[];
     endTimeMs: string;
+    transliteratedWords: string;
 }
 
 export interface LyricsResponse {
+    alternatives?: any[];
+    capStatus?: string;
+    isDenseTypeface?: boolean;
+    isRtlLanguage?: boolean;
+    language?: string;
     lines: LyricsSynched[];
     provider: string;
     providerLyricsDisplayName: string;
     providerLyricsId: string;
-    isSynced: boolean;
+    syncLyricsUri?: string;
+    syncType: "LINE_SYNCED" | "UNSYNCED";
+
+    HasVocalRemoval?: boolean;
+
+    colors?: {
+        background?: number;
+        highlightText?: number;
+        text?: number;
+    };
 }
 
 export interface LyricCached {
@@ -75,7 +90,7 @@ export interface LyricCached {
         };
         hasVocalRemoval: boolean;
         lyrics: {
-            alternatives: [];
+            alternatives: any[];
             capStatus: string;
             isDenseTypeface: boolean;
             isRtlLanguage: boolean;

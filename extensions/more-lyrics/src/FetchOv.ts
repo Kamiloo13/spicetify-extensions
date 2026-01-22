@@ -249,24 +249,24 @@ const fetchOverride = async (...args: [input: RequestInfo | URL, init?: RequestI
 
             const lyricsData: LyricCached["data"] = {
                 colors: {
-                    background: -10848593,
-                    highlightText: -1,
-                    text: -16777216
+                    background: apiLyrics.colors?.background ?? -10848593,
+                    highlightText: apiLyrics.colors?.highlightText ?? -1,
+                    text: apiLyrics.colors?.text ?? -16777216
                 },
-                hasVocalRemoval: false,
+                hasVocalRemoval: apiLyrics.HasVocalRemoval ?? false,
                 lyrics: {
-                    alternatives: [],
-                    capStatus: "NONE",
-                    isDenseTypeface: false,
-                    isRtlLanguage: false,
-                    language: data.language_of_performance[0],
+                    alternatives: apiLyrics.alternatives ?? [],
+                    capStatus: apiLyrics.capStatus ?? "NONE",
+                    isDenseTypeface: apiLyrics.isDenseTypeface ?? false,
+                    isRtlLanguage: apiLyrics.isRtlLanguage ?? false,
+                    language: apiLyrics.language ?? data.language_of_performance[0],
                     lines: apiLyrics.lines,
                     previewLines: apiLyrics.lines.slice(0, 5),
                     provider: apiLyrics.provider,
                     providerDisplayName: apiLyrics.providerLyricsDisplayName + " (more-lyrics)",
                     providerLyricsId: apiLyrics.providerLyricsId,
-                    syncLyricsUri: "",
-                    syncType: apiLyrics.isSynced ? "LINE_SYNCED" : "UNSYNCED"
+                    syncLyricsUri: apiLyrics.syncLyricsUri ?? "",
+                    syncType: apiLyrics.syncType ?? "UNSYNCED"
                 }
             };
 
