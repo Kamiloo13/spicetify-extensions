@@ -176,6 +176,7 @@ declare namespace Spicetify {
 		index: PlayerIndex;
 		item: PlayerTrack;
 		shuffle: boolean;
+		smartShuffle: boolean;
 		repeat: number;
 		speed: number;
 		positionAsOfTimestamp: number;
@@ -236,6 +237,17 @@ declare namespace Spicetify {
 		album_disc_count: string;
 		track_player: string;
 		album_title: string;
+		"canvas.artist.avatar": string;
+		"canvas.artist.name": string;
+		"canvas.artist.uri": string;
+		"canvas.canvasUri": string;
+		"canvas.entityUri": string;
+		"canvas.explicit": string;
+		"canvas.fileId": string;
+		"canvas.id": string;
+		"canvas.type": string;
+		"canvas.uploadedBy": string;
+		"canvas.url": string;
 		"collection.can_add": string;
 		image_large_url: string;
 		"actions.skipping_prev_past_track": string;
@@ -255,6 +267,18 @@ declare namespace Spicetify {
 		duration: string;
 		album_track_count: string;
 		popularity: string;
+		associated_video_id: string;
+		video_association: string;
+		video_association_image: string;
+		video_association_image_height: string;
+		video_association_image_height_large: string;
+		video_association_image_height_xxlarge: string;
+		video_association_image_large: string;
+		video_association_image_width: string;
+		video_association_image_width_large: string;
+		video_association_image_width_xxlarge: string;
+		video_association_image_xxlarge: string;
+		[key: string]: string;
 	};
 	type Album = {
 		type: string;
@@ -298,6 +322,12 @@ declare namespace Spicetify {
 		hifiStatus: number;
 	};
 	namespace Player {
+		/**
+		 *
+		 * Contains vast array of internal APIs.
+		 * Please explore in Devtool Console.
+		 */
+		const origin: any;
 		/**
 		 * Register a listener `type` on Spicetify.Player.
 		 *
@@ -756,11 +786,11 @@ declare namespace Spicetify {
 			/**
 			 * Add an item to sub items list
 			 */
-			addItem(item: Item);
+			addItem(item: Item): void;
 			/**
 			 * Remove an item from sub items list
 			 */
-			removeItem(item: Item);
+			removeItem(item: Item): void;
 			/**
 			 * SubMenu is only available in Profile menu when method "register" is called.
 			 */
@@ -1294,9 +1324,10 @@ declare namespace Spicetify {
 			title: string;
 			/**
 			 * You can specify a string for simple text display
-			 * or a HTML element for interactive config/setting menu
+			 * or a HTML element for interactive config/setting menu,
+			 * or a React JSX element for React-based components
 			 */
-			content: string | Element;
+			content: string | Element | React.JSX.Element;
 			/**
 			 * Bigger window
 			 */
@@ -1313,6 +1344,8 @@ declare namespace Spicetify {
 	const ReactDOM: any;
 	/** React DOM Server instance to render components to string */
 	const ReactDOMServer: any;
+	/** React JSX runtime instance to transform JSX elements */
+	const ReactJSX: any;
 
 	/** Stock React components exposed from Spotify library */
 	namespace ReactComponent {
@@ -1696,13 +1729,13 @@ declare namespace Spicetify {
 			 * Values from the colorSet will be pasted into the CSS.
 			 */
 			UNSAFE_colorSet?: ColorSetBody;
-			onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
-			onMouseEnter?: (event: MouseEvent<HTMLButtonElement>) => void;
-			onMouseLeave?: (event: MouseEvent<HTMLButtonElement>) => void;
-			onMouseDown?: (event: MouseEvent<HTMLButtonElement>) => void;
-			onMouseUp?: (event: MouseEvent<HTMLButtonElement>) => void;
-			onFocus?: (event: FocusEvent<HTMLButtonElement>) => void;
-			onBlur?: (event: FocusEvent<HTMLButtonElement>) => void;
+			onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+			onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+			onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+			onMouseDown?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+			onMouseUp?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+			onFocus?: (event: React.FocusEvent<HTMLButtonElement>) => void;
+			onBlur?: (event: React.FocusEvent<HTMLButtonElement>) => void;
 		};
 		/**
 		 * Generic context menu provider

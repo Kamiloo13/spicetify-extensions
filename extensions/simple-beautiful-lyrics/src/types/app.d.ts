@@ -62,3 +62,5 @@ interface CoverArt {
 
 // Lyrics
 type LyricState = "Unsynced" | "Unsung" | "Active" | "Sung";
+
+declare module "*.scss";
