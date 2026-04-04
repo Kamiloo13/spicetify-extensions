@@ -15,8 +15,8 @@ class Spotify {
         MainLyricsContainerClass: ["lyrics-lyrics-container", "lofIAg8Ixko3mfBrbfej"],
 
         // Cinema Mode
-        CinemaModeBackgroundToRemove: ["x81eiLoZ5zWkSS1y28Oj"],
-        CinemaModeContainerToInjectBackground: ["x0lJCeJrx_56dJTWdATl"],
+        CinemaModeBackgroundToRemove: ["TLo_mZ7hWAaT3fsA"],
+        CinemaModeContainerToInjectBackground: ["q_V1SHcOcAUk9Pa8"],
 
         // Lyrics
         LyricClass: ["lyrics-lyricsContent-lyric", "o69qODXrbOkf6Tv7fa51"],
