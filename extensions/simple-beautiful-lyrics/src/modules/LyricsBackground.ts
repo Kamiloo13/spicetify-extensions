@@ -131,21 +131,19 @@ const CheckForLiveBackgrounds = (mainLyricsContainer: HTMLDivElement | null) => 
     } else {
         ExistingContainerMain = fullScreenContainer;
 
-        // // NOTE: Seems to be no longer in use (removed from build at 2026-04-04)
-        // const normalBackgroundContainer = mainLyricsContainer?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.querySelector(
-        //     ".before-scroll-node"
-        // ) as HTMLDivElement;
+        const normalBackgroundContainer = mainLyricsContainer?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.querySelector(
+            ".before-scroll-node"
+        ) as HTMLDivElement;
 
         if (prevMain && prevMain !== mainLyricsContainer) {
             BackgroundMainCleanup.Clean();
         }
         prevMain = mainLyricsContainer;
 
-        // // NOTE: Seems to be no longer in use (removed from build at 2026-04-04)
-        // if (normalBackgroundContainer) {
-        //     ManageLyricsBackground(normalBackgroundContainer);
-        //     return;
-        // }
+        if (normalBackgroundContainer) {
+            ManageLyricsBackground(normalBackgroundContainer);
+            return;
+        }
 
         // Create a div element on the 5th parent element
         const parentElement = Spotify.getComponent<HTMLDivElement>("CinemaModeContainerToInjectBackground", document.body);
