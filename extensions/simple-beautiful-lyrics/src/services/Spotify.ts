@@ -6,23 +6,23 @@ class Spotify {
     // Enum for component classes to handle both raw and mapped class names
     static readonly ComponentClasses = {
         // Background
-        FullScreenLyricsBackgroundClass: ["lyrics-lyrics-background", "RFThkjLuWfPUO9shrMOZ"],
+        FullScreenLyricsBackgroundClass: ["lyrics-lyrics-background", "nqmjceMqTFCSMXlnquLP"],
 
         // Lyrics Container
-        FullScreenLyricsContainerClass: ["lyrics-lyrics-contentWrapper", "t_dtt9KL1wnNRvRO_y5L"],
+        FullScreenLyricsContainerClass: ["lyrics-lyrics-contentWrapper", "l2GQ00sPnkqe8YLHcfzL"],
 
         // Main Lyrics Container
-        MainLyricsContainerClass: ["lyrics-lyrics-container", "lofIAg8Ixko3mfBrbfej"],
+        MainLyricsContainerClass: ["lyrics-lyrics-container", "bqldaBkacR41KxR2Z0jY"],
 
         // Cinema Mode
-        CinemaModeBackgroundToRemove: ["TLo_mZ7hWAaT3fsA"],
-        CinemaModeContainerToInjectBackground: ["q_V1SHcOcAUk9Pa8"],
+        CinemaModeBackgroundToRemove: ["StXaJR8ueLDRsntBN79Y"],
+        CinemaModeContainerToInjectBackground: ["zayZDU6yXcINWZMzUh5B"],
 
         // Lyrics
-        LyricClass: ["lyrics-lyricsContent-lyric", "o69qODXrbOkf6Tv7fa51"],
-        UnsyncedLyricClass: ["lyrics-lyricsContent-unsynced", "eTLjCqbDo7QehPEPz86a"],
-        HighlightedLyricClass: ["lyrics-lyricsContent-highlight", "Plu0zvuRv7kOQwsQ02cC"],
-        ActiveLyricClass: ["lyrics-lyricsContent-active", "_gZrl2ExJwyxPy1pEUG2"]
+        LyricClass: ["lyrics-lyricsContent-lyric", "rzOQhNuCNTsDR8rE8ss1"],
+        UnsyncedLyricClass: ["lyrics-lyricsContent-unsynced", "aO2StTvteoZW3ixq2Fz4"],
+        HighlightedLyricClass: ["lyrics-lyricsContent-highlight", "MZZCOz_ImVH1skMtX3aI"],
+        ActiveLyricClass: ["lyrics-lyricsContent-active", "dPaa_Hg0z0Ql_UBrV9uZ"]
     };
 
     // Precompiled selectors for each component class (fewer allocations)
