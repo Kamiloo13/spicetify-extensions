@@ -21,7 +21,7 @@ class Spotify {
         // Lyrics
         LyricClass: ["lyrics-lyricsContent-lyric", "rzOQhNuCNTsDR8rE8ss1"],
         UnsyncedLyricClass: ["lyrics-lyricsContent-unsynced", "aO2StTvteoZW3ixq2Fz4"],
-        HighlightedLyricClass: ["lyrics-lyricsContent-highlight", "MZZCOz_ImVH1skMtX3aI"],
+        HighlightedLyricClass: ["lyrics-lyricsContent-highlight", "loNizikBbaCKyI9Gv8xg"],
         ActiveLyricClass: ["lyrics-lyricsContent-active", "dPaa_Hg0z0Ql_UBrV9uZ"]
     };
 
