@@ -2,7 +2,8 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "rootDir": "./src",
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "skipLibCheck": true
     },
     "include": ["./src/**/*", "../../lib/spicetify-types/spicetify.d.ts", "../../lib/spicetify-types/css-modules.d.ts"]
 }

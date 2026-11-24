@@ -1,0 +1,108 @@
+// Animated cover-art background (see features/Background.ts).
+//   .sbl-background-host            element that holds the background (page `.before-scroll-node` or our cinema wrapper)
+//   .sbl-background                 absolutely positioned layer container
+//   [data-sbl-spotify-background]   Spotify's own background layer inside the lyrics container
+//   [data-sbl-fade]                 Spotify's cinema-mode gradient layers
+
+:root {
+    --sbl-lyrics-background-gradient: linear-gradient(90deg, rgba(10, 10, 10, 0.54), rgba(0, 0, 0, 0));
+}
+
+// Replace Spotify's solid background with a subtle gradient so our background shows through
+[data-sbl-spotify-background] {
+    background-color: transparent !important;
+    background-image: var(--sbl-lyrics-background-gradient) !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+[data-sbl-fade] {
+    animation: sbl-background-fadeout 2s ease-in-out forwards;
+}
+
+// Lighter scroll bar on top of the background
+.os-host:has(.sbl-background-host),
+.Root__main-view:has(.sbl-background-host) {
+    .os-scrollbar {
+        padding: 5px;
+
+        .os-scrollbar-handle {
+            mix-blend-mode: overlay;
+            background-color: rgba(252, 249, 249, 0.117) !important;
+        }
+    }
+}
+
+.sbl-background-host {
+    overflow: hidden;
+    position: static;
+}
+
+/*
+    The background imitates Apple Music's blob gradient cheaply: instead of extracting colours from the cover art,
+    a few heavily blurred, slowly rotating, circular copies of the cover art are layered on top of each other.
+*/
+.sbl-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    filter: saturate(1.5) brightness(0.8);
+}
+
+.sbl-background-color,
+.sbl-background-back,
+.sbl-background-back-center {
+    position: absolute;
+    width: 200%;
+    animation: sbl-rotate 35s linear infinite;
+    filter: blur(40px);
+    border-radius: 100em;
+}
+
+// Main layer, top right
+.sbl-background-color {
+    right: 0;
+    top: 0;
+    z-index: 10;
+}
+
+// Covers the bottom left area the main layer does not reach
+.sbl-background-back {
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+    animation-direction: reverse;
+}
+
+// Fills the centre
+.sbl-background-back-center {
+    z-index: 0;
+    width: 300%;
+    right: -50%;
+    top: -20%;
+    animation-direction: reverse;
+}
+
+@keyframes sbl-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes sbl-background-fadeout {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
