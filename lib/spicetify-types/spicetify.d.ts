@@ -1,5 +1,7 @@
 declare namespace Spicetify {
 	type Icon =
+		| "addToPlaylist"
+		| "addToQueue"
 		| "album"
 		| "artist"
 		| "block"
@@ -13,22 +15,33 @@ declare namespace Spicetify {
 		| "chevron-right"
 		| "chromecast-disconnected"
 		| "clock"
+		| "collapseLibrary"
 		| "collaborative"
 		| "computer"
+		| "connectDevice"
 		| "copy"
+		| "create"
+		| "credits"
 		| "download"
 		| "downloaded"
 		| "edit"
 		| "enhance"
+		| "enterFullScreen"
 		| "exclamation-circle"
+		| "excludeTaste"
+		| "expandLibrary"
 		| "external-link"
 		| "facebook"
 		| "follow"
+		| "friendActivity"
 		| "fullscreen"
 		| "gamepad"
+		| "goToAlbum"
+		| "goToArtist"
 		| "grid-view"
 		| "heart"
 		| "heart-active"
+		| "heartAdd"
 		| "instagram"
 		| "laptop"
 		| "library"
@@ -39,10 +52,13 @@ declare namespace Spicetify {
 		| "lyrics"
 		| "menu"
 		| "minimize"
+		| "miniplayer"
 		| "minus"
 		| "more"
 		| "new-spotify-connect"
+		| "nowPlaying"
 		| "offline"
+		| "openDesktop"
 		| "pause"
 		| "phone"
 		| "play"
@@ -53,15 +69,20 @@ declare namespace Spicetify {
 		| "podcasts"
 		| "projector"
 		| "queue"
+		| "radio"
 		| "repeat"
 		| "repeat-once"
 		| "search"
 		| "search-active"
+		| "share"
 		| "shuffle"
 		| "skip-back"
 		| "skip-back15"
 		| "skip-forward"
 		| "skip-forward15"
+		| "skipBack"
+		| "skipForward"
+		| "smartShuffle"
 		| "soundbetter"
 		| "speaker"
 		| "spotify"
@@ -74,8 +95,10 @@ declare namespace Spicetify {
 		| "volume"
 		| "volume-off"
 		| "volume-one-wave"
+		| "volumeHigh"
 		| "volume-two-wave"
 		| "watch"
+		| "whatsNew"
 		| "x";
 	type Variant =
 		| "bass"
@@ -1943,9 +1966,9 @@ declare namespace Spicetify {
 		 * Set default app title. This has no effect if the player is running.
 		 * Will override any previous forced title.
 		 * @param title Title to set
-		 * @return Promise that resolves to a function to cancel forced title. This doesn't reset the title.
+		 * @return Promise that resolves to a subscription. Call `cancel()` on it to stop forcing the title. This doesn't reset the title.
 		 */
-		function set(title: string): Promise<{ clear: () => void }>;
+		function set(title: string): Promise<{ cancel: () => void }>;
 		/**
 		 * Reset app title to default
 		 */
